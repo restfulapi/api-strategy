@@ -637,6 +637,7 @@ It is an absolute, non-negotiable requirement that RESTful APIs be tested using 
 It is important to test all representations of a resource, and all expected responses (both success and error).
 
 Support for testing RESTful endpoints is often built-in to a testing framework or supported through a third party library. When available,  higher-level abstractions (i.e., DSLs) should be used.  For example, the following Groovy snippet shows the use of a higher-level DSL supporting REST:
+
 ```groovy
     post("/api/colleges") {   // 'POST' /api/colleges => 'create'
         headers[ 'Content-Type' ] = 'application/json'
