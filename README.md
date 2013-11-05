@@ -1,3 +1,7 @@
+---
+title: RESTful API Strategy
+---
+
 #RESTful API Strategy
 
 <p/><p/>
@@ -157,15 +161,17 @@ To avoid unnecessarily sending a large representation to the server, an API may 
 
 ####Report Validation Errors
 To augment use more generic status codes like '400', it is recommended that a custom HTTP Header be used to provide more information. For example, if using a '400' status code for a validation error, a custom HTTP Header can provide additional information:
-```http
+
+```
     X-Status-Reason: Validation failed
 ```
+
 Validation errors should also be provided within the response body.
 
 The JSON or XML should provide details of any validation errors if a 400 or 422 status code is returned.  Following is an example error:
 
 ```json
-    "errors" : [
+  { "errors" : [
         {
           "type": "validation",
           "resource": {
@@ -174,6 +180,7 @@ The JSON or XML should provide details of any validation errors if a 400 or 422 
           "message": "districtDivision value exceeds two character limit"
         }
     ]
+  }
 ```
 
 The specific structure and format of detailed error information is not standardized, and this strategy allows for different representations since various frameworks handle such responses differently.
@@ -200,7 +207,7 @@ A nice overview of URIs is available at '[http://www.skorks.com/2010/05/what-eve
 
 An example URL compliant with this strategy is:
 
-```http
+```
     https://greatvalley.edu/student-course-catalog/api/colleges/college-2453
 ```
 
@@ -232,7 +239,7 @@ _A note regarding the alternative (not selected) approaches:_
 
 An example custom media type consistent with this strategy is:
 
-```html
+```
     application/vnd.hedtech.v2+json
 ```
 
@@ -248,7 +255,7 @@ When returning collections, it may be necessary to support paging.  There is no 
 
 It is recommended that paging leverage query parameters as shown in the following example:
 
-```http
+```
     https://greatvalley.edu/student-course-catalog/api/colleges/?per-page=50&page=7
 ```
 
@@ -263,12 +270,12 @@ While there is no current standard for querying RESTful APIs, there are importan
 
 When feasible, query criteria should be specified using query parameters in a GET request.  For instance, the following URL could be used to retrieve a list of forest science courses for term '200510 Fall 2004'.
 
-```http
+```
     https://greatvalley.edu/student-course-catalog/api/courses?subject=FRSC&term=200510%20Fall%202004
 ```
 A more structured alternative to the above uses indexed query parameter 'filters' as shown below.
 
-```http
+```
 https://greatvalley.edu/student-course-catalog/api/courses?filter[0][field]=subject&filter[1][value]=200510%20Fall%202004&filter[0][operator]=eq&filter[1][field]=term&filter[1][operator]=eq&filter[0][value]=FRSC&max=50
 ```
 
@@ -276,7 +283,7 @@ Nested resources can be used to provide an elegant RESTful API and may reduce th
 
 The following example shows how a resource may be exposed directly as well as be exposed as a nested resource, to allow a client application to retrieve a list of Forest Science courses for term '200510 Fall 2004'.
 
-```http
+```
     GET /courses?subject=FRSC&term=200510%20Fall%202004
     GET /subject/FRSC/courses?term=200510%20Fall%202004
     GET /subject/FRSC/terms/200510%20Fall%202004/courses
@@ -284,7 +291,7 @@ The following example shows how a resource may be exposed directly as well as be
 
 Note the last example above has deep nesting, which is not recommended. It is recommend that resources only be nested one level. Also note, that same resource (courses) could be accessed as a nested resource under yet another resource
 
-```http
+```
     GET /instructor/3895483/courses
 ```
 
@@ -329,7 +336,7 @@ _It will be important to periodically revisit the strategy pertaining to media t
 ####<a id="standard-media-types"></a>Respond with Standard Media Types
 When a custom media type is used, it is recommended the service return a response using a Content-Type header with the standard 'application/json' (or 'application/xml') media type and an additional custom header such as shown below:
 
-```http
+```
     X-hedtech-Media-Type: application/vnd.hedtech.v4+json
 ```
 
@@ -358,7 +365,7 @@ It is preferred by this strategy to accept and return content that is comprised 
 
 For example, the following depicts returning a collection of 'colleges', with paging information reflected in a Link header:
 
-```http
+```console
     $ curl -H "Accept: application/vnd.hedtech.v4+json" -u batman:{PROTECTED} https://greatvalley.edu/student-course-catalog/api/colleges?page=2&per_page=10
     HTTP/1.1 200 OK
     Content-Type: application/json
@@ -370,7 +377,7 @@ For example, the following depicts returning a collection of 'colleges', with pa
 
 Note the addition of a custom header to communicate the total count. This is not required, but permitted. Alternatively, the following is permitted:
 
-```http
+```console
 $ curl -H "Accept: application/vnd.hedtech.v4+json" -u batman:{PROTECTED} https://greatvalley.edu/student-course-catalog/api/colleges?offset=2&max=10
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -401,7 +408,7 @@ Regardless, the content is returned as a JSON array of the resources:
 
 Alternatively, although not preferred, a small envelope may be used to communicate the additional information (as in the following example):
 
-```http
+```console
     $ curl -H "Accept: application/vnd.hedtech.v4+json" -u batman:{PROTECTED} https://greatvalley.edu/student-course-catalog/api/colleges?offset=2&max=10
     HTTP/1.1 200 OK
     Content-Type: application/json
@@ -442,7 +449,7 @@ _Again, a 'bulk' API is not necessary for filtering and paging a large number of
 
 The response should include a representation of the 'collection' resource that includes at a minimum the identifiers necessary to allow a client to subsequently interact with any contained resources individually.
 
-```http
+```
 \# Note: id of '1' is not really used but included to comply with conventions
 PUT /collection-of-persons/1
 Content-Type: vnd.hedtech.collection-of-persons.v1+json;charset=utf-8
@@ -450,8 +457,8 @@ Accept: vnd.hedtech.collection-of-persons.v1+json
 ```
 ```json
 {
-  "persons": [ { /*...person representation...*/ },
-               { /*...person representation...*/ }
+  "persons": [ { "name": "Bart", "someAttribute": "someValue" },
+               { "name": "Homer", "someAttribute": "someValue" }
              ]
 }
 ```
@@ -476,22 +483,22 @@ When an API is asynchronous it should respond with a '202 Accepted' HTTP status 
 
 Following is an example request that shows a 'bulk' collection-oriented resource (see '[RESTful Bulk Processing](#bulk)' above) being created asynchronously. (While 'batch' APIs may often be used for 'bulk' resources, a 'batch' API may be used for any resource.)
 
-```http
+```
 POST /collection-of-persons
 Content-Type: vnd.hedtech.collection-of-persons.v1+json;charset=utf-8
 ```
 
 ```json
 {
-   "persons": [ { /*...person representation...*/ },
-                { /*...person representation...*/ }
+   "persons": [ { "name": "Lisa", "someAttribute": "someValue" },
+                { "name": "Marge", "someAttribute": "someValue" }
               ]
 }
 ```
 
 and an example response that includes a reference to the 'batch' processing:
 
-```http
+```
 HTTP 1.1 202 ok
 X-hedtech-message: collection-of-persons resource accepted
 ```
@@ -504,7 +511,7 @@ X-hedtech-message: collection-of-persons resource accepted
 
 Having such an identifier allows the client to issue a subsequent GET:
 
-```http
+```
 GET /collection-of-persons/12345
 Accept: vnd.hedtech.collection-of-persons.v1+json
 ```
@@ -513,24 +520,28 @@ whose response gives the current status of the asynchronous processing:
 
 ```json
 {
-  "_link": "collection-of-persons/12345"
+  "_link": "collection-of-persons/12345",
   "status": "pending",
-  [ { "status": "succeeded",
-      "resource": { /*...new person representation...*/ }
-    },
-    { "status": "queued",
-      "resource": { ...candidate person representation... }
-    },
-    { "status": "failed",
-      "errors": [
-        "type": "validation",
-        "resource": {
-           "id": 25
-        },
-        "message": "firstName value exceeds 100 character limit"
-      ]
-    }
-  ]
+  "results": [
+      { "status": "succeeded",
+        "resource": { "name": "Lisa" }
+      },
+      { "status": "queued",
+        "resource": { "name": "Maggie" }
+      },
+      { "status": "failed",
+        "errors": [
+          { "error":
+             { "type": "validation",
+               "resource": {
+                  "id": 25
+               },
+             "message": "firstName value exceeds 100 character limit"
+             }
+          }
+        ]
+      }
+    ]
 }
 ```
 
@@ -560,9 +571,11 @@ When such standards mature, Affordance-Rich Messages (ARMs) may be used to build
 For now, RESTful APIs should be developed with a pragmatic approach to incorporate additional links such as 'next' and 'previous' to support a multi-step process.
 
 To support affordances, link relations may be used to represent relationships between resources. The product architect may model link relations using [atom:link](http://tools.ietf.org/html/rfc4287#section-4.2.7) or [HAL](http://blog.stateless.co/post/13296666138/json-linking-with-hal).
+
 ```console
     $ curl -H "Accept: application/json" -u batman:{PROTECTED} https://greatvalley.edu/student-course-catalog/api/colleges/25/
 ```
+
 ```json
     {
         "id": 25,
@@ -584,9 +597,9 @@ When a representation complies fully with HAL, a media type of application/hal+j
 ####<a id="governance"></a>Governance
 Governance is a broad area that may encompass service registries, schema catalogs, server configurations, service management (consumption, usage patterns, etc.), and even development processes.
 
-At a minimum, a lightweight process and an organization-wide schema reuse library, data dictionary, or registry is needed to promote commonality across an organization creating APIs.  
+At a minimum, a lightweight process and an organization-wide schema reuse library, data dictionary, or registry is needed to promote commonality across an organization creating APIs.
 
-Governance should ensure consistent exposure of resources with respect to representations and semantics. For example, when an API client requests a 'student' resource and specifies 'vnd.hedtech.student.v2+json' in the 'Accept' header, a very specific representation is expected. 
+Governance should ensure consistent exposure of resources with respect to representations and semantics. For example, when an API client requests a 'student' resource and specifies 'vnd.hedtech.student.v2+json' in the 'Accept' header, a very specific representation is expected.
 
 ####Avoid Data Binding Approaches
 Binding approaches may hinder support of Jon Postel's Robustness Principle. Rigid binding strategies used to support representations of the internal resources can make it very difficult to be 'forgiving' (or liberal) with respect to the input that is acceptable.
@@ -680,6 +693,7 @@ The unfortunately-named 'Authorization' header (used for authentication!) should
 2. Create an Authorization header having the word 'Basic' followed by a single space and the encoded string
 
 Here is an example invocation showing the Authentication header:
+
 ```console
     curl -D- -X GET -H "Authorization: Basic ZnJlZDpmcmVk" "https://greatvalley.edu/example-app/courses"
 ```
@@ -714,48 +728,14 @@ When using OAuth 2.0, the OAuth2 token should be provided within the HTTP 'Autho
 
 _Note: OAuth 2.0 will not be an easy choice until an OAuth 2 authorization server is provisioned to support the open digital campus._  Fortunately, OAuth authorization may be integrated into a CAS Server. OAuth 2.0 may also be configured to use [SAML 2.0 Bearer Assertion](http://tools.ietf.org/html/draft-ietf-oauth-saml2-bearer-16).
 
-####<a id="rate-limiting"></a>Limit Usage
-It is sometimes important to limit usage rates for clients.  When rate limiting is needed, an API should use the following HTTP headers:
-```http
-    X-RateLimit-Limit: 1000
-    X-RateLimit-Remaining: 999
-    X-RateLimit-Reset: 1342521939
-```
-The X-RateLimit-Reset should represent the remaining window before the rate limit resets, in UTC epoch seconds.
-
-It is common to expose a 'rate-limit' resource, such that a 'GET /rate-limit' would return:
-```http
-    Status: 200 OK
-    X-RateLimit-Limit: 500
-    X-RateLimit-Remaining: 495
-    X-RateLimit-Reset: 1342521939
-```
-
-```json
-    {
-      "rate": {
-        "remaining": 495,
-        "limit": 500
-      }
-    }
-```
-When a client exceeds the rate limit, the response should use an HTTP status code of 429 with the following content:
-```json
-    {
-      "errors": [
-        {
-          "code": 00,
-          "message": "Rate limit exceeded"
-        }
-      ]
-    }
-```
 ####<a id="multi-tenancy"></a>Support Multi-Tenancy or Multi-Entity Processing
 
 Codifying tenancy/entity information within the URI path is recommended for on-premise deployments.
-```http
+
+```
     /{application-name}/{tenant-name}/api/{pluralized-resource-name}
 ```
+
 Specifying the tenant/entity within the URL is recommended over the use of a subdomain since a client institution may refuse to use wildcard DNS entries (e.g., to avoid the higher cost of wildcard SSL certificates versus using standard SSL certificates). Also, wildcard certs are not supported in some older browsers \-- it is the responsibility of the product architect to assess browser requirements.
 
 Using subdomains to support either multi-tenancy or multi-entity processing (MEP) is also permitted.  In fact, the use of subdomains is considered a best practice for two primary reasons: First, using a subdomain to specify a tenant/entity allows the URI path to stay consistent across tenants or entities and thus provides for a consistent API across all tenants or entities.  Secondly, since the FQDN (fully qualified domain name) references a particular tenant/entity, client applications may be configured to support a specific tenant or entity without needing to know anything about multi-tenancy or MEP. Employing subdomains may also facilitate configuration of load balancers and the use of content delivery networks (CDNs).  Use of subdomains is recommended for hosted solutions.
@@ -841,7 +821,8 @@ While direct database-level integration has significant drawbacks, it should be 
 
 ----
 
-##<a id="texts"></a>References 
+##<a id="texts"></a>References
+
 * [Hypermedia APIs with HTML5 & Node](http://www.amazon.com/Building-Hypermedia-APIs-HTML5-Node/dp/1449306578/ref=sr_1_1?ie=UTF8&qid=1354201129&sr=8-1&keywords=Hypermedia+APIs+with+HTML5+%26+Node), Mike Amundsen
 
 * [RESTful Web Services](http://www.amazon.com/Restful-Web-Services-Leonard-Richardson/dp/0596529260/ref=sr_1_1?s=books&ie=UTF8&qid=1354201179&sr=1-1&keywords=restful+web+services), Leonard Richardson & Sam Ruby
