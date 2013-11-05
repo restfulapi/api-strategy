@@ -60,6 +60,7 @@ So, what makes an API a good API? We will use the following tenets gathered from
 * Does not expose internal domain object structures as resource representations
 * Requires knowledge only of a single URI entry point and access to documentation specifying the media types. _(Note this is an hypermedia 'stretch goal'.)_
 * Follows Jon Postel's Robustness Principle
+
 >Follow a general principle of robustness: be conservative in what you do, be liberal in what you accept from others."
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jon Postel, TCP document RFC 761
 
