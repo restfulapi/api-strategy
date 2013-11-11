@@ -1,6 +1,3 @@
----
-title: RESTful API Strategy
----
 
 #RESTful API Strategy
 
@@ -29,16 +26,15 @@ REST stands for REpresentational State Transfer, and was first described in chap
 
 APIs that adopt REST principles:
 
-* Expose 'Resources' to represent important concepts and objects within the service
-* Ensure each resource is uniquely 'addressable' via a URI, so that clients may interact with them
+* Expose 'Resources' to represent important concepts and objects
+* Ensure each resource is uniquely 'addressable' via a URI, so that clients may interact with them over HTTP
 * Provide 'representations' (e.g., using JSON and or XML) of those resources
-* Ensure representations are versioned so that clients may use a stable API
 * Provide a consistent interface based upon the standard HTTP methods
 * Ensure interaction with the API is stateless in nature, in order to provide flexibility in deployment as well as to promote scalability
 
-While RESTful APIs provide important benefits to the users of the APIs (as outlined above), REST principles may be used to guide internal application architecture and design (referred to as [Resource-Oriented Architecture](http://en.wikipedia.org/wiki/Resource-oriented_architecture)).  That is, 'thinking in terms of resources' encourages elegant and simple solutions. Consequently, popular application frameworks such as Ruby on Rails provide direct support for structuring an application around REST.
+While RESTful APIs provide important benefits to the users of the APIs (as outlined above), REST principles may be used to guide internal application architecture and design (referred to as [Resource-Oriented Architecture](http://en.wikipedia.org/wiki/Resource-oriented_architecture)).  That is, 'thinking in terms of resources' can promote elegant and simple solutions. Consequently, popular application frameworks like '[Ruby on Rails](http://rubyonrails.org/)' and '[Grails](http://grails.org)' provide direct support for structuring an application around REST.
 
-Martin Fowler authored a very nice overview of the [Richardson Maturity Model](http://martinfowler.com/articles/richardsonMaturityModel.html) (RMM) used for gauging an API's 'level of RESTfulness'.  This is the most popular maturity model for REST.
+Martin Fowler authored a very nice overview of the [Richardson Maturity Model](http://martinfowler.com/articles/richardsonMaturityModel.html) (RMM) used for gauging an API's 'level of RESTfulness'.  This seems to be the most popular maturity model for REST.
 
 For those new to HATEOAS, a nice overview was authored by Jim Webber: "[How to GET a Cup of Coffee](http://www.infoq.com/articles/webber-rest-workflow)".  Essentially, HATEOAS exposes the state machine of an application such that the client interacting with the application is provided with appropriate options at each step within a workflow.
 
@@ -737,11 +733,11 @@ Codifying tenancy/entity information within the URI path is recommended for on-p
     /{application-name}/{tenant-name}/api/{pluralized-resource-name}
 ```
 
-Specifying the tenant/entity within the URL is recommended over the use of a subdomain since a client institution may refuse to use wildcard DNS entries (e.g., to avoid the higher cost of wildcard SSL certificates versus using standard SSL certificates). Also, wildcard certs are not supported in some older browsers \-- it is the responsibility of the product architect to assess browser requirements.
+Specifying the tenant/entity within the URL is recommended over the use of a subdomain if installed at client institutions that may refuse to use wildcard DNS entries (e.g., to avoid the higher cost of wildcard SSL certificates versus using standard SSL certificates). Also, wildcard certs are not supported in some older browsers \-- it is the responsibility of the product architect to assess browser requirements.
 
-Using subdomains to support either multi-tenancy or multi-entity processing (MEP) is also permitted.  In fact, the use of subdomains is considered a best practice for two primary reasons: First, using a subdomain to specify a tenant/entity allows the URI path to stay consistent across tenants or entities and thus provides for a consistent API across all tenants or entities.  Secondly, since the FQDN (fully qualified domain name) references a particular tenant/entity, client applications may be configured to support a specific tenant or entity without needing to know anything about multi-tenancy or MEP. Employing subdomains may also facilitate configuration of load balancers and the use of content delivery networks (CDNs).  Use of subdomains is recommended for hosted solutions.
+Using subdomains to support either multi-tenancy or multi-entity processing (MEP) is also permitted.  In fact, the use of subdomains seems to be considered a best practice for two primary reasons: First, using a subdomain to specify a tenant/entity allows the URI path to stay consistent across tenants or entities and thus provides for a consistent API across all tenants or entities.  Secondly, since the FQDN (fully qualified domain name) references a particular tenant/entity, client applications may be configured to support a specific tenant or entity without needing to know anything about multi-tenancy or MEP. Employing subdomains may also facilitate configuration of load balancers and the use of content delivery networks (CDNs).  Use of subdomains is recommended for hosted solutions.
 
-Lastly, when an API is intended to be used solely by client applications that are MEP-aware it is permitted to codify the entity using a custom header or directly within representations. While not recommended for most APIs, some client applications may benefit from more opaque MEP concepts that are propagated across the solution boundaries.
+Lastly, when an API is intended to be used solely by client applications that are tenant-aware it is permitted to codify the entity using a custom header or directly within representations. While not recommended for most APIs, some client applications may benefit from more opaque MEP concepts that are propagated across the solution boundaries.
 
 ####<a id="restdesignpatterns"></a>Understand Common REST Design Patterns
 REST is simple and does not include standards (like the various WS-* standards used with SOAP) which address areas like reliable messaging, asynchronous messaging, or business transactions.  Consequently, when such support is necessary it must be modeled explicitly by the API designer.
@@ -768,12 +764,14 @@ As mentioned previously, there are many efforts underway to address the current 
 
 ----
 
-##Using RPC-Based APIs
+##Alternatives to REST
+
+####Using RPC-Based APIs
 RPC-based APIs include those implemented using SOAP as well as native procedure invocations over a network.
 
 _Some may argue that SOAP is 'document centric' and is not the same as RPC. While developers may want to make such arguments, the reality is the 'RPC' is embedded within the document.  This is true regardless of the WSDL style used, including Microsoft's 'document/literal wrapped' pattern._
 
-####SOAP and WS-* Web Services
+#####SOAP and WS-* Web Services
 *WS-\* should not be employed unless there are specific requirements to support* (e.g., due to a partner agreement or 3rd party service). There are significant disadvantages to using SOAP and supporting WS-* standards, including:
 
 * Requires use of XML (and thus precludes use of JSON)
@@ -786,12 +784,12 @@ _Some may argue that SOAP is 'document centric' and is not the same as RPC. Whil
 
 This does not mean to imply that REST is a replacement for WS-* Web Services.  WS-* standards address a number of areas that are not well suited for REST - such as advanced partial-message encryption, digital signing, asynchronous and reliable messaging, orchestration, etc. While REST APIs can be constructed to address many of these areas (recall section [REST Design Patterns](#restdesignpatterns) above), doing may incur additional complexity akin to using these WS-* standards.
 
-####Other RPC
+#####Other RPC
 While socket-oriented integration has had a reduced role since the emergence of the web, the recent 'Web Sockets' standard will be very important for developing rich 'real time' applications. Web Sockets enable a full duplex, bi-directional channel between the browser and the server and may be used to greatly improve the interactivity of a web application. While tools like Node.js greatly simplify socket programming, architects are expected to justify communication over sockets versus over HTTP.
 
 Architects are cautioned not to allow the use of Web Sockets to diminish the focus on developing RESTful/hypermedia APIs. Web Sockets must be used to enable higher interactivity but not be used as a substitute for RESTful APIs.  (Note: There is work being performed within the community to codify the use of REST principles over Web Sockets.)
 
-##Asynchronous Messaging
+####Asynchronous Messaging
 Asynchronous messaging provides a number of benefits and may augment the use of RESTful/hypermedia APIs.  Asynchronous messaging provides:
 
 * Reliability and guaranteed delivery
@@ -805,7 +803,7 @@ In addition, some NoSQL databases including MongoDB and Redis may be used to imp
 
 Nevertheless, asynchronous messaging solutions may play an important role within the open digital campus.  [AMQP](http://www.amqp.org) is the preferred standard for cross platform asynchronous messaging. Many AMQP solutions exist, including [RabbitMQ](http://www.rabbitmq.com) which is very highly recommended.  [JMS](http://en.wikipedia.org/wiki/Java_Message_Service) is not recommended for integration as this is a 'Java' standard, although JMS may continue to be employed internally within JVM-based solutions. (Note many AMQP providers also support JMS, including RabbitMQ.)
 
-##Using Relational Database Integration (sans API)
+####Using Relational Database Integration (sans API)
 Database integration (that exposes a relational schema and uses SQL) has a number of drawbacks and is no longer recommended for near real-time integration.
 
 Specifically, database-level integration:
@@ -828,7 +826,7 @@ While direct database-level integration has significant drawbacks, it should be 
 
 * [RESTful Web Services](http://www.amazon.com/Restful-Web-Services-Leonard-Richardson/dp/0596529260/ref=sr_1_1?s=books&ie=UTF8&qid=1354201179&sr=1-1&keywords=restful+web+services), Leonard Richardson & Sam Ruby
 
-* Numerous blogs found across the web. _(This strategy document is not an invention, but is a gathering of best practices and insights provided by many across the community.)_
+* Numerous blogs found across the web. _(This strategy document is not an invention, but is a gathering of best practices and insights provided by many across the community.)_ In addition, many APIs (e.g, those from Google, Amazon) provide detailed documentation.
 
 * [JSON Hypermedia API Language](http://tools.ietf.org/html/draft-kelly-json-hal-03), Mike Kelly ([specification](http://stateless.co/hal_specification.html)
 
