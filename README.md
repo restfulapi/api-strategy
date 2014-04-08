@@ -1,4 +1,3 @@
-
 #RESTful API Strategy
 
 <p/><p/>
@@ -82,7 +81,7 @@ There is much material available on-line or within [texts](#texts) regarding '[r
 * Resources are not exposed directly but instead 'representations' of resources are exposed.
 * Resources are not just back-end domain models, but are designed for external client use. That is, while resources are often constructed using data and structure from a backend domain model, it is not recommended the resource 'be' the domain object (without any transformation).
 * Resources may be 'nested'. That is, the URIs may reflect that one resource is nested within another like in this made-up example:  http://greatvalley.edu/example-app/courses/2305/sections/2465 (where section '2465' is a nested resource under course 2305).
-* Resources must be interacted with using a single request. An important consideration is that the interaction with a resource must occur within a single unit of work. For example, if one cannot update a resource without also updating another resource, than those two resources must not be exposed separately. It is important to consider transaction boundaries and relation constraints when exposing resource endpoints.
+* Resources must be interacted with using a single request. An important consideration is that the interaction with a resource must occur within a single unit of work. For example, if one cannot update a resource without also updating another resource, then those two resources must not be exposed separately. It is important to consider transaction boundaries and relation constraints when exposing resource endpoints.
 
 Identifying the resources to expose, and the content of those resources, is an iterative process and requires feedback.  Consequently, agile development practices that are focused on rapid feedback loops should be used when developing an API.  Developing APIs without rapid feedback from users of the API is simply not following an agile process. It is also important not to allow one client to drive the API design at the expense of other clients (if they are also known), or to deviate from common API practices or this strategy.
 
