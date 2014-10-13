@@ -199,6 +199,8 @@ With respect to URIs, RESTful APIs should:
 * Support nested resources when doing so is logical and only two levels deep
 * The use of plural resource names is preferred, but not required. For example, it is proposed to use 'colleges' versus 'college' for URLs used to refer to both collections and specific elements within a collection. Using singular naming is not incorrect, but using plural naming is also common and may arguably read better.
 * Representations for a 'collection' and a 'single' instance of a resource are to be considered the same resource from an addressing perspective. That is, a list of colleges may be referenced as '/colleges', a specific college instance may be referenced using a URI such as '/colleges/college-43'.
+* Avoid use of multi-part keys to identify a resource.  If an exposed resource does not have a single, immutable key, attempt to model it as a nested resource.  For example, if exposing items from a checklist, and your legacy data model can only retrieve items by a combination of checklist name and item number within the checklist, prefer exposing items as '/checklists/myList/items/3' as opposed to /items/myList-3, which requires both caller and application to agree on an encoding mechanism for the multi-part key 'myList-3'.
+
 
 A nice overview of URIs is available at '[http://www.skorks.com/2010/05/what-every-developer-should-know-about-urls](http://www.skorks.com/2010/05/what-every-developer-should-know-about-urls)'.
 
