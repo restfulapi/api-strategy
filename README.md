@@ -15,8 +15,7 @@ _Disclaimer: This strategy document is **not** an invention, but only represents
 
 ####What is an API?
 
->An Application Programming Interface (API) is a specification intended to be used as an interface by software components to communicate with each other.  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Wikipedia](http://en.wikipedia.org/wiki/Application_programming_interface)
-
+>An Application Programming Interface (API) is a specification intended to be used as an interface by software components to communicate with each other.  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Wikipedia](http://en.wikipedia.org/wiki/Application_programming_interface)
 
 ####What is REST?
 
@@ -24,46 +23,46 @@ _Disclaimer: This strategy document is **not** an invention, but only represents
 
 REST stands for REpresentational State Transfer, and was first described in chapter 5 of [Roy Fielding's Ph.D dissertation](http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm).  There are many resources for learning about REST. For those who are not yet familiar with REST principles, you may want to review the [REST API Tutorial](http://www.restapitutorial.com).
 
-APIs that adopt REST principles:
+APIs that adopt REST principles are 'stateless', 'resource-orientated', 'expose a uniform interface', and use 'hypermedia as the engine of application state' (HATEOAS).
+
+For those not familiar with HATEOAS, a nice overview was authored by Jim Webber: "[How to GET a Cup of Coffee](http://www.infoq.com/articles/webber-rest-workflow)".  Essentially, HATEOAS exposes the state machine of an application such that the client interacting with the application is provided with appropriate options at each step within a workflow.  HATEOAS is not often supported by APIs stated as being RESTful, however Roy Fielding has stated '[hypermedia-driven application state](http://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven)' is a 'requirement' of REST.
+
+Expanding a bit upon the above, we can state RESTful APIs:
 
 * Expose 'Resources' to represent important concepts and objects
 * Ensure each resource is uniquely 'addressable' via a URI, so that clients may interact with them over HTTP
-* Provide 'representations' (e.g., using JSON and or XML) of those resources
-* Provide a consistent interface based upon the standard HTTP methods
+* Provide one or more 'representations' (e.g., using JSON and or XML) of those resources
+* Provide a consistent, standard interface based upon the standard HTTP methods
 * Ensure interaction with the API is stateless in nature, in order to provide flexibility in deployment as well as to promote scalability
-
-While RESTful APIs provide important benefits to the users of the APIs (as outlined above), REST principles may be used to guide internal application architecture and design (referred to as [Resource-Oriented Architecture](http://en.wikipedia.org/wiki/Resource-oriented_architecture)).  That is, 'thinking in terms of resources' can promote elegant and simple solutions. Consequently, popular application frameworks like '[Ruby on Rails](http://rubyonrails.org/)' and '[Grails](http://grails.org)' provide direct support for structuring an application around REST.
+* Use hypermedia as the engine of application state
 
 Martin Fowler authored a very nice overview of the [Richardson Maturity Model](http://martinfowler.com/articles/richardsonMaturityModel.html) (RMM) used for gauging an API's 'level of RESTfulness'.  This seems to be the most popular maturity model for REST.
 
-For those new to HATEOAS, a nice overview was authored by Jim Webber: "[How to GET a Cup of Coffee](http://www.infoq.com/articles/webber-rest-workflow)".  Essentially, HATEOAS exposes the state machine of an application such that the client interacting with the application is provided with appropriate options at each step within a workflow.
+While RESTful APIs provide important benefits to the clients of the APIs (as outlined above), REST principles may also be used to guide internal application architecture and design (referred to as [Resource-Oriented Architecture](http://en.wikipedia.org/wiki/Resource-oriented_architecture)).
 
-_This strategy document will not reference '[Service Oriented Architecture](http://en.wikipedia.org/wiki/Service-oriented_architecture)' (SOA) terminology, as the term 'SOA' is very overloaded. Rather than debate SOA merits or whether or not REST 'is' SOA, discussing SOA provides little constructive benefit and whether rightfully or not has bad connotations within the IT community.  This strategy document may reference SOAP, WSDL, and various WS-* standards, which may be employed as necessary to satisfy specific requirements._
+**Thinking in terms of resources can promote elegant and simple solutions.**
 
-_Interesting, some within the community seem to have already abandoned the name 'REST' in favor of 'Hypermedia'. We will continue to use both REST and Hypermedia when referring to APIs._
-
-####Why 'RESTful' vs. 'REST'?
-
-Out of the four major constraints established for REST ('statelessness', 'resource-orientation', 'uniform interface', and 'hypermedia-driven application state' aka [HATEOAS](http://en.wikipedia.org/wiki/HATEOAS)), the last constraint is not often supported.  Roy Fielding has, however, stated '[hypermedia-driven application state](http://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven)' (which corresponds to the RMM level 3) is a 'requirement' of REST.  This is a primary reason we say 'RESTful APIs' versus 'REST APIs'.
+_This strategy document will not reference '[Service Oriented Architecture](http://en.wikipedia.org/wiki/Service-oriented_architecture)' (SOA) terminology, as the term 'SOA' is very overloaded. Rather than debate SOA merits or whether or not REST 'is' SOA, discussing SOA provides little constructive benefit and whether rightfully or not has bad connotations among some within the IT community._
 
 ####What makes a RESTful API good?
 
 So, what makes an API a good API? We will use the following tenets gathered from various authors across the web:
 
 * Adheres to core REST principles
-* Has documention sufficient to guide the user of the API (and that does not redundantly document REST principles but instead focuses on defining the media types used for representations).
+* Has documention sufficient to guide the user of the API (and that does not redundantly document REST principles but instead focuses on representations, validation rules, security, etc.).
 * Provides support for backward compatibility and or versioning
 * Does not expose internal domain object structures as resource representations
 * Requires knowledge only of a single URI entry point and access to documentation specifying the media types. _(Note this is an hypermedia 'stretch goal'.)_
 * Follows Jon Postel's Robustness Principle
 
 >Follow a general principle of robustness: be conservative in what you do, be liberal in what you accept from others."
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jon Postel, TCP document RFC 761
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jon Postel, TCP document RFC 761
 
 ----
 
 ##Guidance for REST/Hypermedia APIs
-Our strategic focus is to expose APIs that adhere to REST principles whenever possible.  This section provides specific recommendations and guidance for developing RESTful APIs.
+
+Expose APIs that adhere to REST principles whenever possible.  This section provides specific recommendations and guidance for developing RESTful APIs.
 
 ####<a id="meaningful-resources"></a>Expose Meaningful Resources for Your API
 >The key abstraction of information in REST is a resource. Any information that can be named can be a resource: a document or image, a temporal service (e.g. "today's weather in Los Angeles"), a collection of other resources, a non-virtual object (e.g. a person), and so on.
@@ -130,10 +129,10 @@ RESTful APIs should be designed to use standard [HTTP status codes](http://https
 | 401 | Authentication has failed, or the authenticated client is not authorized. |
 | 404 | The requested resource could not be found. |
 | 405 | The method is not supported by the resource. |
-| 406 | Not Acceptable. Return this code when the Accept header (or a custom header as discussed in this strategy) identifies an unsupported format. |
+| 406 | Not Acceptable. Return this code when the Accept header (or a custom header as discussed in this strategy) requests a response in an unsupported format. |
 | 409 | There is a conflict. Return this if the request reflects stale data (that violates an optimistic lock). |
 | 412 | A precondition failed. Used for conditional requests (e.g., when an 'If-Match' header does not match a resource's Etag value). |
-| 415 | Unsupported Media Type. Return when a client requests content in an unsupported format. |
+| 415 | Unsupported Media Type. Return when a client request contains content in an unsupported format. |
 | 417 | Expectation Failed. Return this if appropriate when supporting 'look-before-you-leap' requests |
 | 422 | 'Unprocessable' entity.  See note below. |
 | 429 | The rate limit is exceeded |
@@ -146,6 +145,7 @@ No. Product architects **cannot** use '418 (I'm a teapot)' :-)
 While the above table represents a minimum list for API developers, your middleware will certainly use additional codes, particularly those related to redirects.
 
 ####Support Conditional Requests and Caching
+
 It is recommended that RESTful APIs support conditional requests and caching by including an ETag header within every response to a GET request.  ETags should be used to provide an opaque cache validator using an MD5 or SHA1 hash of the bytes within a representation.
 
 When a representation includes an optimistic lock token (e.g., often labeled as a resource 'version'), this can be used to augment the current optimistic lock verification. That is, since an ETag value will be constructed using the representation that includes the optimistic lock token, clients may use conditional GET requests to support optimistic locking.
@@ -157,6 +157,7 @@ Similarly, a conditional PUT may be used. If the 'If-Match' header is different 
 To avoid unnecessarily sending a large representation to the server, an API may also support 'look-before-you-leap' (LBYL, as coined by [Richardson and Ruby](http://www.amazon.com/RESTful-Web-Services-ebook/dp/B0043D2ED6/ref=sr_1_1?s=books&ie=UTF8&qid=1370445392&sr=1-1&keywords=restful+web+services)) requests. An LBYL request is either a PUT or POST request that contains no body and includes an 'Expect' header with a value of '100-continue'.  This is useful when determination of whether a PUT or POST 'would' be successful can be made using the current state of the resource or the HTTP headers included in the request. If the server determines the request would not be accepted (e.g., perhaps the request's 'Content-length' header indicated the representation was excessively large) it should return a '417 Expectation Failed' status code.  Support for LBYL requests is not required.
 
 ####Report Validation Errors
+
 To augment use more generic status codes like '400', it is recommended that a custom HTTP Header be used to provide more information. For example, if using a '400' status code for a validation error, a custom HTTP Header can provide additional information:
 
 ```
@@ -182,10 +183,11 @@ The JSON or XML should provide details of any validation errors if a 400 or 422 
 
 The specific structure and format of detailed error information is not standardized, and this strategy allows for different representations since various frameworks handle such responses differently.
 
-Report Optimistic Lock Violations
-Resources should generally be protected against stale updates by incorporating an optimistic lock. If you are not familiar with optimistic locking, please work with your product architect or Global Architecture representative.
+#### Report Optimistic Lock Violations
 
-It is recommended that '409' be returned whenever an optimistic lock violation occurs while updating the database, regardless of whether there are other validation errors. This is often not the behavior implemented within frameworks (including Grails) and may require special logic to handle. The argument for this recommendation is: 'Do you really know if a resource representation is invalid when that representation is based on stale data? Some validation checks might fail simply because the representation is not consistent with the current persisted state.' This recommendation is not a requirement, but warrants consideration by the product architect.
+Resources may be protected against stale updates by incorporating an optimistic lock.
+
+It is recommended that '409' be returned whenever an optimistic lock violation occurs while updating the database, regardless of whether there are other validation errors. This is often not the behavior implemented within frameworks (including Grails) and may require special logic to handle. The argument for this recommendation is: 'Do you really know if a resource representation is invalid when that representation is based on stale data? Some validation checks might fail simply because the representation is not consistent with the current persisted state. This recommendation is not a requirement, but warrants consideration when developing an API.
 
 Note: When handling a conditional PUT request as discussed above, a 412 should be returned.
 
@@ -197,10 +199,8 @@ With respect to URIs, RESTful APIs should:
 * Use dashes (aka hyphens) in lieu of underscores (when easily supported by your framework)
 * Use dashes (aka hyphens) in lieu of camel case. (This is proposed only for 'API' URLs, and only if supported by your framework.)
 * Support nested resources when doing so is logical and only two levels deep
-* The use of plural resource names is preferred, but not required. For example, it is proposed to use 'colleges' versus 'college' for URLs used to refer to both collections and specific elements within a collection. Using singular naming is not incorrect, but using plural naming is also common and may arguably read better.
-* Representations for a 'collection' and a 'single' instance of a resource are to be considered the same resource from an addressing perspective. That is, a list of colleges may be referenced as '/colleges', a specific college instance may be referenced using a URI such as '/colleges/college-43'.
+* The use of pluralized resource names is preferred for URLs used to refer to either a collection or a single instance. For example, a list of colleges might be retrieved using 'GET /colleges' while a specific college instance might be retrieved using 'GET /colleges/\{id\}'. (Using singular naming is not incorrect, but using plural naming is also common and may arguably read better.)
 * Avoid use of multi-part keys to identify a resource.  If an exposed resource does not have a single, immutable key, attempt to model it as a nested resource.  For example, if exposing items from a checklist, and your legacy data model can only retrieve items by a combination of checklist name and item number within the checklist, prefer exposing items as '/checklists/myList/items/3' as opposed to /items/myList-3, which requires both caller and application to agree on an encoding mechanism for the multi-part key 'myList-3'.
-
 
 A nice overview of URIs is available at '[http://www.skorks.com/2010/05/what-every-developer-should-know-about-urls](http://www.skorks.com/2010/05/what-every-developer-should-know-about-urls)'.
 
@@ -211,27 +211,25 @@ An example URL compliant with this strategy is:
 ```
 
 ####<a id="api-versioning"></a>Use API Versioning
-It is important to version APIs in order to provide clients with stability. This is particularly true when an API is used directly by a 3rd party solution for which our clients must then coordinate changes when we 'break' our API.
 
-There are several common approaches used across the industry today for versioning RESTful APIs, the most common being to specify a version:
+It may be important to version APIs in order to provide a stable API to clients.
+
+There are several common approaches used across the industry today for versioning APIs, the most common being to specify a version:
 
 * within the URL
 * using a query parameter
+* using a custom header
 * using a custom media type identified in the Accept and Content-Type headers
 
-RESTful APIs should use custom media types (previously known as 'MIME types') to allow client applications the ability to interact with a stable, versioned API when desired.  This versioning should be specified on a resource by resource basis.
+It is recommended RESTful APIs use either a custom header or custom media types when versioning is needed.  This versioning should be specified on a resource by resource basis.
 
-These custom media types:
+When using custom media types, they do not need to be [registered](http://www.iana.org/assignments/media-types/application) nor do they need to correspond to a schema document (although they often may).
 
-* Do NOT need to be [registered](http://www.iana.org/assignments/media-types/application)
-* Do NOT need to correspond to a schema document (although they may)
+Employing custom media types provides flexibility beyond versioning by allowing multiple representations to be used for the same resource. For instance, one could establish 'synopsis' and 'detail' representations with corresponding custom media types to allow a client to ask for a lighter weight or detailed representation of a resource.
 
-Employing custom media types provides flexibility:
+Using a custom header, such as 'X-Resource-Version', may be useful when versioning is based upon a versioned catalog of schemas.  It is recommended that [semver](http://semver.org) be used.
 
-* It allows for both API-wide version-specifying media types as well as resource-specific media types (e.g., that correspond to a schema definition)
-* It allows for codifying other considerations beyond versioning. For instance, one could establish 'synopsis' and 'detail' media types to allow a client to ask for a lighter weight or complete representation of a resource.
-
-_A note regarding the alternative (not selected) approaches:_
+_A note regarding the two non-recommended approaches:_
 
 * _Embedding version identifiers within the URL results in URLs that change, even though the 'resource' itself has not changed. This violates a major tenet of API design._
 * _Using a query parameter to specify versions is not convenient (as it requires parsing of query parameters)_
@@ -242,12 +240,13 @@ An example custom media type consistent with this strategy is:
     application/vnd.hedtech.v2+json
 ```
 
-Note: There is no reasonable need to expose 'point releases' of an API, and doing so is not consistent with this strategy. Consequently, there should never be a media type specified for a point release such as: application/vnd.hedtech.v2.5+json
+An API client will likely find no benefit by using minor or patch point releases of an API, as minor and patch releases should be backward compatible. Consequently it may be simpler to use simple  indicators (e.g., v1, v2, v3) to indicate API versions. In some cases, however, it may be useful to indicate a full semver version (e.g., that corresponds to a schema catalog version supported by the API).
 
 _Please reference the '[Use Standard Media Types](#media-types) section of this document for additional discussion regarding media types (that is not focused solely on versioning)._
 
-A final note regarding API versioning: In some cases **it may not be warranted.**
-Versioning of APIs introduces complexity both within the service implementation as well as within clients using the API.  If an API is 'relatively stable' (a subjective measure), the day-to-day cost may exceed the potentially very rare need to introduce a non-backward compatible representation of a resource.  Consequently, while versioning is important the product architect may propose, with justification, construction of APIs without support for versioning.
+A final note regarding API versioning: In some cases **it may not be warranted.**  In fact, Roy Fielding states the best practice for versioning an API is: ["Don't"](http://www.slideshare.net/evolve_conference/201308-fielding-evolve/31).
+
+Versioning of APIs introduces complexity both within the service implementation as well as within clients using the API.  If an API is 'relatively stable' (a subjective measure), the day-to-day cost may exceed the potentially very rare need to introduce a non-backward compatible representation of a resource. And, HATEOAS if adopted provides mechansims to introduce changes without versioning.
 
 ####<a id="api-paging"></a>Support Paging
 When returning collections, it may be necessary to support paging.  There is no single standard for paging, and this strategy will allow flexibility to allow common frameworks to provide this support.
@@ -557,6 +556,7 @@ whose response gives the current status of the asynchronous processing:
 * An API may expose a 'bulk' collection-oriented resource used in an asynchronous request such that subsequent GET invocations may be used to retrieve the status of the asynchronous work.  If the resource instead represents a single entity (versus a collection), the true 'id' of that resource should be returned if possible.  If this is not possible (e.g., the 'id' cannot be specified until the asynchronous processing completes) then a temporary id may be returned *as long as that 'id' cannot conflict with a real 'id'. If a real 'id' is returned and a client issues a GET using that 'id' before the resource has been created asynchronously, a '404' should be returned.
 
 ####<a id="representation-hypermedia"></a>Support 'Hypermedia' APIs
+
 Unfortunately, neither XML nor JSON provide direct support for hypermedia. That is, neither XML nor JSON provides direct support for 'affordances' (or 'Hypermedia Factors') that express hypermedia related metadata.  Consequently, hypermedia APIs must codify this information.
 
 >A design affordance is a design element that communicates how something should be used without requiring documentation.[*](http://blog.apigee.com/detail/restful_api_design_nouns_are_good_verbs_are_bad)
@@ -594,6 +594,7 @@ To support affordances, link relations may be used to represent relationships be
 When a representation complies fully with HAL, a media type of application/hal+json may be used instead of application/json. While other emerging standards (e.g., JSON-LD) may be considered, HAL is recommended due to its simplicity. (It is not a requirement to use HAL over JSON-LD or other approach; the product architect should review the referenced libraries before making a decision. When these 'standards' are adopted more widely, this strategy will very likely require one over the other.)
 
 ####<a id="governance"></a>Governance
+
 Governance is a broad area that may encompass service registries, schema catalogs, server configurations, service management (consumption, usage patterns, etc.), and even development processes.
 
 At a minimum, a lightweight process and an organization-wide schema reuse library, data dictionary, or registry is needed to promote commonality across an organization creating APIs.
@@ -601,6 +602,7 @@ At a minimum, a lightweight process and an organization-wide schema reuse librar
 Governance should ensure consistent exposure of resources with respect to representations and semantics. For example, when an API client requests a 'student' resource and specifies 'vnd.hedtech.student.v2+json' in the 'Accept' header, a very specific representation is expected.
 
 ####Avoid Data Binding Approaches
+
 Binding approaches may hinder support of Jon Postel's Robustness Principle. Rigid binding strategies used to support representations of the internal resources can make it very difficult to be 'forgiving' (or liberal) with respect to the input that is acceptable.
 
 Historically, many Java applications employed popular XML binding libraries like JAXB and Castor which simplified marshaling/unmarshaling but also resulted in very rigid implementations.  Often these applications validated the input using full validation (such as XML Schema validation) before it would be accepted.
@@ -612,25 +614,13 @@ For example, if one needs to update a 'description' property within a resource, 
 Accepting partial content is not a 'requirement', but it is an area that warrants consideration by the product architect.
 
 ####Validate Representations During Testing
-Despite the above discussion on 'binding' and the desire to be liberal in what one accepts, validation is certainly important for some applications and vital for testing.
 
-XML validation against an XML Schema is very appropriate for automated testing, although incurs significant performance overhead that may exceed the benefit of validation within production environments.
+Despite the above discussion on 'binding' and the desire to be liberal in what one accepts, validation of representations contained in a request is certainly important for some applications and always vital for testing.
 
-A Groovy example is shown below:
-
-```groovy
-    def xsdUrl = "file:///${path}/college.v1.0.xsd"
-    def factory = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI )
-    def schema = factory.newSchema( new StreamSource( new URL( xsdUrl ).openStream() ) )
-    schema.newValidator().validate( new StreamSource( new StringReader( xmlInstance ) ) )
-```
-
-JSON validation is more problematic, as the primary 'schema' is an unapproved RFC for [JSON Schema](http://tools.ietf.org/html/draft-zyp-json-schema-03). Nevertheless, tools are being developed upon this draft, including [one for Java](https://github.com/fge/json-schema-validator) and [one for .Net](http://james.newtonking.com/projects/json-net.aspx). Most validators are implemented for JavaScript, including [JSV](https://github.com/garycourt/JSV), [schema.js](https://github.com/akidee/schema.js) (supporting version 2 of the draft), and [json-schema](https://github.com/kriszyp/json-schema).
-
-Note this discussion does NOT pertain to validation of content, which is independent of the representation.  Data validation is a primary responsibility of a service and must always be performed.
+There are many tools supporting validation against XML Schema or JSON Schema.  When using JSON, a JSON Schema version 4 compatible validator should be used.
 
 ####<a id="api-testing"></a>Use Automated Testing
-It is an absolute, non-negotiable requirement that RESTful APIs be tested using automated regression tests.  Every modern platform supports this best practice, and no exceptions are permitted.
+It is an absolute, non-negotiable requirement that RESTful APIs be tested using automated regression tests.  Every modern platform supports this best practice, and no exceptions should be permitted.
 
 It is important to test all representations of a resource, and all expected responses (both success and error).
 
@@ -659,74 +649,36 @@ Support for testing RESTful endpoints is often built-in to a testing framework o
     assertEquals "Expected code 'Z9' but got ${data.code}", 'Z9', data.code
 ```
 
-####<a id="performance"></a>Test Performance
+####<a id="performance"></a>Load Testing
+
 Testing must be conducted to ensure satisfactory performance under load. The specific performance requirements (requests per second, response times, etc.) should be established by the product owner.
 
-This testing need not be complex. RESTful APIs can often be tested using simple tools such as '[httperf](http://www.hpl.hp.com/research/linux/httperf/)'.
+This testing need not be complex. RESTful APIs can often be tested using simple tools such as '[httperf](http://www.hpl.hp.com/research/linux/httperf/)' or '[ab](http://httpd.apache.org/docs/2.2/programs/ab.html) (apache bench).  There are, however, many cloud-based services providing sophisticated support for load testing.
+
+*While beyond the scope of this RESTful API guide, it is highly recommended API implementations be reactive systems.  Please reference [The Reactive Manifesto](http://www.reactivemanifesto.org).*
 
 ####<a id="cors"></a>Support Cross Origin Resource Sharing
+
 Modern solutions are likely to be implemented as single-page web applications comprised of JavaScript modules communicating to backend RESTful APIs residing in different domains.  To facilitate the ability to build such solutions, the API must support cross domain communication.
 
 The preferred (and newer) approach is to support [Cross Origin Resource Sharing](http://www.w3.org/TR/cors) (CORS). CORS support is not required but should be considered by the product architect.
 
 An alternative approach to circumvent cross domain issues is to support JSON-P callbacks. This may be supported by allowing clients to include a '?callback' parameter to GET requests in order for the results to be wrapped within a JSON function. While permitted by this strategy, CORS is the preferred approach.
 
-####<a id="api-security"></a>Secure RESTful APIs
-Most APIs should be protected from unauthenticated access and should be accessed over an encrypted [TLS](http://en.wikipedia.org/wiki/Transport_Layer_Security) connection to prevent eavesdropping and tampering.
+####<a id="api-security"></a>RESTful API Authentication and Authorization
 
-RESTFul APIs should be protected using either:
+APIs will usually need to be protected from unauthenticated access and should also be accessed over an encrypted [TLS](http://en.wikipedia.org/wiki/Transport_Layer_Security) connection to prevent eavesdropping and tampering.
 
-1. [Basic Authentication](http://en.wikipedia.org/wiki/Basic_access_authentication) (over TLS)
-2. [HMAC-SHA1](https://en.wikipedia.org/wiki/Hash-based_message_authentication_code) Digest
-2. [Jasig CAS](http://www.jasig.org/cas) (within a domain)
-2. [OAuth 2.0 authorization protocol](http://tools.ietf.org/html/rfc6749)
+There are many approaches for authentication of API clients, some of which are listed below.  It is imperative the API developer understand security requirements and vulnerabilities, and ensure proper authentication and authorization. API security is not discussed in detail within this guide.
+
+* [JSON Web Token](http://jwt.io)  (**recommended**)
+* [HMAC-SHA256](https://en.wikipedia.org/wiki/Hash-based_message_authentication_code) Digest
+* [OAuth 2.0 authorization protocol](http://tools.ietf.org/html/rfc6749)
+ - [OpenID Connect](http://openid.net/connect/)
+* [Basic Authentication](http://en.wikipedia.org/wiki/Basic_access_authentication) (over TLS, for legacy integration)
+* [Jasig CAS](http://www.jasig.org/cas) (within a domain)
 
 _Note: [SAML 2.0](http://en.wikipedia.org/wiki/SAML_2.0) does not currently define a standard binding for RESTful API endpoints.  SAML assertions may be supported through integration with a CAS server or an OAuth 2.0 authorization server._
-
-######<a id="basic-auth"></a>Basic Authentication
-[Basic Authentication](http://en.wikipedia.org/wiki/Basic_access_authentication) is very popular and convenient. Again: Basic Authentication must only be used over an encrypted TLS connection (i.e., [HTTPS](http://en.wikipedia.org/wiki/HTTPS)) and all intermediaries such as proxies and gateways must be protected.
-
-The unfortunately-named 'Authorization' header (used for authentication!) should be constructed as follows:
-
-1. Construct a string of the form username:password
-2. Base64 encode the string
-2. Create an Authorization header having the word 'Basic' followed by a single space and the encoded string
-
-Here is an example invocation showing the Authentication header:
-
-```console
-    curl -D- -X GET -H "Authorization: Basic ZnJlZDpmcmVk" "https://greatvalley.edu/example-app/courses"
-```
-_(Note: 'curl' provides a more convenient '-u' option that will generate the Authorization header for you based upon a supplied username:password.)_
-
-######<a id="digest"></a>HMAC-SHA1 Digest
-A [keyed-Hash Message Authentication Code](https://en.wikipedia.org/wiki/Hash-based_message_authentication_code) (HMAC) using SHA1 may be used to 'sign a request' (to ensure data integrity and or to authenticate the request).  To 'authenticate' a request, a client-specific 'API Key' should be used along with a shared secret (a private key) to create the signature.  To ensure 'data integrity', elements from the request content may be included when creating the signature.
-
-The authentication signature (digest) should be included in the 'Authorization' header of each request.
-
-Provisioning of API client keys must be performed 'out of band', and clients must be held responsible to protect the shared secret (private key).
-
-######<a id="cas"></a>CAS
-[CAS](http://www.jasig.org/cas) may be leveraged when the RESTful endpoints reside within an enterprise already using CAS. Note that CAS may only be used within a single domain.
-To employ CAS proxy authentication:
-
-1. A REST client must authenticate to the CAS Server and retrieve a CAS 'Service Ticket' (ST).
-2. The client must then validate the Service Ticket, including a proxy callback URL in the request.
-3. The CAS server will send a ticket granting ticket (TGT) to the callback URL
-3. The client (also a server exposing the proxy callback URL) takes the TGT and asks the CAS server for a service ticket
-3. The client validates the Service Ticket with the CAS server
-3. The client interacts with your service, including the service ticket
-
-The [Proxy CAS Walkthrough](https://wiki.jasig.org/display/CAS/Proxy+CAS+Walkthrough) provides a nice walkthrough of this process (albeit using older terminology).
-
-An alternative to using CAS proxy authentication as described above is to employ the [CAS RESTful API](https://wiki.jasig.org/display/CASUM/RESTful+API) whereby the RESTful endpoint represents the 'user'. As another alternative, CAS 3.5.1+ may be configured to use OAuth 2.  CAS may be configured to act as either an OAuth client (delegating the actual authentication to an OAuth authorization service) or as an OAuth server (allowing clients to use the OAuth protocol versus using CAS).
-
-######<a id="oauth2"></a>OAuth 2.0
-[OAuth 2.0](http://tools.ietf.org/html/rfc6749) is not truly 'authentication' but a means to allow a user to 'authorize' an application to use another service. OAuth is often used by RESTful endpoints like Twitter, Netflix, or Google Drive to allow an end user to authenticate to those services and grant access to personal information contained in those services to an application.  The user never needs to authenticate directly with the application.
-
-When using OAuth 2.0, the OAuth2 token should be provided within the HTTP 'Authorization' header and a secure channel must be used.
-
-_Note: OAuth 2.0 will not be an easy choice until an OAuth 2 authorization server is provisioned to support the open digital campus._  Fortunately, OAuth authorization may be integrated into a CAS Server. OAuth 2.0 may also be configured to use [SAML 2.0 Bearer Assertion](http://tools.ietf.org/html/draft-ietf-oauth-saml2-bearer-16).
 
 ####<a id="multi-tenancy"></a>Support Multi-Tenancy or Multi-Entity Processing
 
@@ -743,6 +695,7 @@ Using subdomains to support either multi-tenancy or multi-entity processing (MEP
 Lastly, when an API is intended to be used solely by client applications that are tenant-aware it is permitted to codify the entity using a custom header or directly within representations. While not recommended for most APIs, some client applications may benefit from more opaque MEP concepts that are propagated across the solution boundaries.
 
 ####<a id="restdesignpatterns"></a>Understand Common REST Design Patterns
+
 REST is simple and does not include standards (like the various WS-* standards used with SOAP) which address areas like reliable messaging, asynchronous messaging, or business transactions.  Consequently, when such support is necessary it must be modeled explicitly by the API designer.
 
 **Reliable Messaging with REST**
@@ -760,21 +713,25 @@ SOAP allows for externalization of business transactions using WS-BusinessActivi
 As mentioned previously, there are many efforts underway to address the current shortfalls with current REST best practices and framework support.
 
 ####<a id="odata"></a>OData
+
 [OData](http://www.odata.org) is a newer OASIS project originally driven by Microsoft.  OData is based upon the Entity 1 Data Model (EDM) from Microsoft's 'Entity Framework'.  While Forrester currently positions OData as speculative, .Net projects that already incorporate EDM may find this a reasonable approach.  Consequently, this strategy does not preclude the adoption of OData.  OData is, however, not required and benefits must be weighed against risk of such early adoption.
 
 ####<a id="ldp"></a>Linked Data Platform
- [Linked Data Platform](http://www.w3.org/2012/ldp/wiki/Main_Page) is a W3C working group focused on addressing hypermedia requirements not sufficiently supporting using current REST best practices.
+
+[Linked Data Platform](http://www.w3.org/2012/ldp/wiki/Main_Page) is a W3C working group focused on addressing hypermedia requirements not sufficiently supporting using current REST best practices.
 
 ----
 
 ##Alternatives to REST
 
 ####Using RPC-Based APIs
+
 RPC-based APIs include those implemented using SOAP as well as native procedure invocations over a network.
 
 _Some may argue that SOAP is 'document centric' and is not the same as RPC. While developers may want to make such arguments, the reality is the 'RPC' is embedded within the document.  This is true regardless of the WSDL style used, including Microsoft's 'document/literal wrapped' pattern._
 
 #####SOAP and WS-* Web Services
+
 *WS-\* should not be employed unless there are specific requirements to support* (e.g., due to a partner agreement or 3rd party service). There are significant disadvantages to using SOAP and supporting WS-* standards, including:
 
 * Requires use of XML (and thus precludes use of JSON)
@@ -788,11 +745,13 @@ _Some may argue that SOAP is 'document centric' and is not the same as RPC. Whil
 This does not mean to imply that REST is a replacement for WS-* Web Services.  WS-* standards address a number of areas that are not well suited for REST - such as advanced partial-message encryption, digital signing, asynchronous and reliable messaging, orchestration, etc. While REST APIs can be constructed to address many of these areas (recall section [REST Design Patterns](#restdesignpatterns) above), doing may incur additional complexity akin to using these WS-* standards.
 
 #####Other RPC
+
 While socket-oriented integration has had a reduced role since the emergence of the web, the recent 'Web Sockets' standard will be very important for developing rich 'real time' applications. Web Sockets enable a full duplex, bi-directional channel between the browser and the server and may be used to greatly improve the interactivity of a web application. While tools like Node.js greatly simplify socket programming, architects are expected to justify communication over sockets versus over HTTP.
 
 Architects are cautioned not to allow the use of Web Sockets to diminish the focus on developing RESTful/hypermedia APIs. Web Sockets must be used to enable higher interactivity but not be used as a substitute for RESTful APIs.  (Note: There is work being performed within the community to codify the use of REST principles over Web Sockets.)
 
 ####Asynchronous Messaging
+
 Asynchronous messaging provides a number of benefits and may augment the use of RESTful/hypermedia APIs.  Asynchronous messaging provides:
 
 * Reliability and guaranteed delivery
@@ -807,6 +766,7 @@ In addition, some NoSQL databases including MongoDB and Redis may be used to imp
 Nevertheless, asynchronous messaging solutions may play an important role within the open digital campus.  [AMQP](http://www.amqp.org) is the preferred standard for cross platform asynchronous messaging. Many AMQP solutions exist, including [RabbitMQ](http://www.rabbitmq.com) which is very highly recommended.  [JMS](http://en.wikipedia.org/wiki/Java_Message_Service) is not recommended for integration as this is a 'Java' standard, although JMS may continue to be employed internally within JVM-based solutions. (Note many AMQP providers also support JMS, including RabbitMQ.)
 
 ####Using Relational Database Integration (sans API)
+
 Database integration (that exposes a relational schema and uses SQL) has a number of drawbacks and is no longer recommended for near real-time integration.
 
 Specifically, database-level integration:
