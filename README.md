@@ -220,6 +220,12 @@ An example URL compliant with this strategy is:
     https://greatvalley.edu/student-course-catalog/api/colleges/college-2453
 ```
 
+#### <a id="json-patch"></a>Support JSON PATCH
+
+When supporting PATCH and JSON respresentations, it is _highly recommended_ that [JSON Patch](https://tools.ietf.org/html/rfc6902) be employed as a standard approach to PATCH. JSON Patch is now supported on most platforms and there are many supporting libraries to facilitate supporting this standard.
+
+The proper custom media type for PATCH requests using JSON Patch is 'application/json-patch+json'. This standard custom media type should be set as the Content-Type header irrespective of the resource being patched.
+
 #### <a id="api-versioning"></a>Use API Versioning
 
 It may be important to version APIs in order to provide a stable API to clients.
@@ -570,10 +576,6 @@ The life of a 'collection' resource created through a batch API may limited, and
 
 * If it is deemed necessary to expose a resource asynchronously, is there a need to also allow synchronous invocation? If so, a different prefix (e.g., 'aapi/') may be introduced to distinguish asynchronous from synchronous endpoints.)
 * An API may expose a 'bulk' collection-oriented resource used in an asynchronous request such that subsequent GET invocations may be used to retrieve the status of the asynchronous work.  If the resource instead represents a single entity (versus a collection), the true 'id' of that resource should be returned if possible.  If this is not possible (e.g., the 'id' cannot be specified until the asynchronous processing completes) then a temporary id may be returned *as long as that 'id' cannot conflict with a real 'id'. If a real 'id' is returned and a client issues a GET using that 'id' before the resource has been created asynchronously, a '404' should be returned.
-
-#### <a id="json-patch"></a>Support JSON PATCH
-
-When supporting PATCH and using JSON respresentations, it is highly recommended that [JSON Patch](https://tools.ietf.org/html/rfc6902) be employed as a standard approach to PATCH. JSON Patch is now supported on most platforms and there are many supporting libraries to facilitate supporting this standard.  
 
 #### <a id="representation-hypermedia"></a>Support 'Hypermedia' APIs
 
