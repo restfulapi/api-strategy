@@ -1,11 +1,11 @@
 
-# RESTful API Strategy
+# HTTP / RESTful API Strategy
 
 <p/><p/>
 
 ## TL;DR
 
->This document provides guidance regarding the development of **non-trivial RESTful APIs.**
+>This document provides guidance regarding the development of **non-trivial HTTP and RESTful APIs.**
 
 ----
 
@@ -25,20 +25,27 @@ _Disclaimer: This strategy document is **not** an invention, but only represents
 
 REST stands for REpresentational State Transfer, and was first described in chapter 5 of [Roy Fielding's Ph.D dissertation](http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm).  There are many resources for learning about REST. For those who are not yet familiar with REST principles, you may want to review the [REST API Tutorial](http://www.restapitutorial.com).
 
-APIs that adopt REST principles are 'stateless', 'resource-orientated', 'expose a uniform interface', and use 'hypermedia as the engine of application state' (HATEOAS).
+APIs that adopt REST principles are 'stateless', 'resource-orientated', 'expose a uniform interface', and use 'hypermedia as the engine of application state' (HATEOAS). It is this last item which distinguishes a RESTful API from an HTTP based API. Roy Fielding has stated:
 
-For those not familiar with HATEOAS, a nice overview was authored by Jim Webber: "[How to GET a Cup of Coffee](http://www.infoq.com/articles/webber-rest-workflow)".  Essentially, HATEOAS exposes the state machine of an application such that the client interacting with the application is provided with appropriate options at each step within a workflow.  HATEOAS is not often supported by APIs stated as being RESTful, however Roy Fielding has stated '[hypermedia-driven application state](http://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven)' is a 'requirement' of REST.
+>'[hypermedia-driven application state](http://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven)' is a 'requirement' of REST.
 
-Expanding a bit upon the above, we can state RESTful APIs:
+_For those not familiar with HATEOAS, a nice overview was authored by Jim Webber: "[How to GET a Cup of Coffee](http://www.infoq.com/articles/webber-rest-workflow)".  Essentially, HATEOAS exposes the state machine of an application such that the client interacting with the application is provided with appropriate options at each step within a workflow.  HATEOAS is not often supported by APIs stated as being RESTful, however per Roy Fielding it is a requirement._ 
+
+This API strategy references both 'HTTP APIs' and 'RESTful APIs', the latter employing hypermedia. When this strategy discusses HTTP APIs, it is referring to using HTTP correctly and fully but not using hypermedia-based.
+
+Expanding a bit upon the above, we can state HTTP APIs:
 
 * Expose 'Resources' to represent important concepts and objects
 * Ensure each resource is uniquely 'addressable' via a URI, so that clients may interact with them over HTTP
 * Provide one or more 'representations' (e.g., using JSON and or XML) of those resources
 * Provide a consistent, standard interface based upon the standard HTTP methods
 * Ensure interaction with the API is stateless in nature, in order to provide flexibility in deployment as well as to promote scalability
+
+In addition to the above, RESTful APIs:
+
 * Use hypermedia as the engine of application state
 
-Martin Fowler authored a very nice overview of the [Richardson Maturity Model](http://martinfowler.com/articles/richardsonMaturityModel.html) (RMM) used for gauging an API's 'level of RESTfulness'.  This seems to be the most popular maturity model for REST.
+Martin Fowler authored a very nice overview of the [Richardson Maturity Model](http://martinfowler.com/articles/richardsonMaturityModel.html) (RMM) used for gauging an API's 'level of RESTfulness'.  This seems to be the most popular maturity model for REST (and includes what we call HTTP APIs here).
 
 While RESTful APIs provide important benefits to the clients of the APIs (as outlined above), REST principles may also be used to guide internal application architecture and design (referred to as [Resource-Oriented Architecture](http://en.wikipedia.org/wiki/Resource-oriented_architecture)).
 
@@ -46,15 +53,14 @@ While RESTful APIs provide important benefits to the clients of the APIs (as out
 
 _This strategy document will not reference '[Service Oriented Architecture](http://en.wikipedia.org/wiki/Service-oriented_architecture)' (SOA) terminology, as the term 'SOA' is very overloaded. Rather than debate SOA merits or whether or not REST 'is' SOA, discussing SOA provides little constructive benefit and whether rightfully or not has bad connotations among some within the IT community._
 
-#### What makes a RESTful API good?
+#### What makes an HTTP/RESTful API good?
 
 So, what makes an API a good API? We will use the following tenets gathered from various authors across the web:
 
-* Adheres to core REST principles
+* Uses HTTP correctly (with respect to HTTP methods, status codes, headers, caching, etc.)
 * Has documention sufficient to guide the user of the API (and that does not redundantly document REST principles but instead focuses on representations, validation rules, security, etc.).
 * Provides support for backward compatibility and or versioning
-* Does not expose internal domain object structures as resource representations
-* Requires knowledge only of a single URI entry point and access to documentation specifying the media types. _(Note this is an hypermedia 'stretch goal'.)_
+* Uses hypermedia as the engine of application state _(this is required for an HTTP API to also be considered a RESTful API.)_
 * Follows Jon Postel's Robustness Principle
 
 >Follow a general principle of robustness: be conservative in what you do, be liberal in what you accept from others."
@@ -62,15 +68,17 @@ So, what makes an API a good API? We will use the following tenets gathered from
 
 ----
 
-## Guidance for REST/Hypermedia APIs
+## Guidance for HTTP and REST/Hypermedia APIs
 
-Expose APIs that adhere to REST principles whenever possible.  This section provides specific recommendations and guidance for developing RESTful APIs.
+Expose APIs that adhere to REST principles whenever possible.  This section provides specific recommendations and guidance for developing HTTP/RESTful APIs.
 
 #### <a id="meaningful-resources"></a>Expose Meaningful Resources for Your API
+
 >The key abstraction of information in REST is a resource. Any information that can be named can be a resource: a document or image, a temporal service (e.g. "today's weather in Los Angeles"), a collection of other resources, a non-virtual object (e.g. a person), and so on.
 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Roy Fielding
 
 Or, more concisely:
+
 >"A resource is anything that's important enough to be referenced as a thing in itself.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Richardson and Ruby
 
@@ -81,7 +89,7 @@ There is much material available on-line or within [texts](#texts) regarding '[r
 * Resources are addressable through a URI
 * All interaction with a resource is limited to using one of the standard REST actions (i.e., one of the HTTP Methods discussed [below](#http-methods))
 * Resources are not exposed directly but instead 'representations' of resources are exposed.
-* Resources are not just back-end domain models, but are designed for external client use. That is, while resources are often constructed using data and structure from a backend domain model, it is not recommended the resource 'be' the domain object (without any transformation).
+* Resources are not just back-end domain models, but are designed for external client use. That is, while resources are often constructed using data and structure from a backend domain model, it is not recommended the resource 'be' the domain object (without any transformation or thought).
 * Resources may be 'nested'. That is, the URIs may reflect that one resource is nested within another like in this made-up example:  http://greatvalley.edu/example-app/courses/2305/sections/2465 (where section '2465' is a nested resource under course 2305).
 * Resources must be interacted with using a single request. An important consideration is that the interaction with a resource must occur within a single unit of work. For example, if one cannot update a resource without also updating another resource, then those two resources must not be exposed separately. It is important to consider transaction boundaries and relation constraints when exposing resource endpoints.
 
@@ -90,7 +98,8 @@ Identifying the resources to expose, and the content of those resources, is an i
 Lastly, it is very beneficial to use the API internally whenever possible - as the saying goes: "to eat your own dog food".  Exercising an API internally will help uncover inefficiencies and problems, so you may improve the API more quickly than if the only feedback was from external users.
 
 #### <a id="http-methods"></a>Use Standard HTTP Methods
-APIs should at a minimum expose a standard REST interface using the four HTTP methods (aka verbs) shown below:
+
+APIs should at a minimum expose a standard interface using HTTP methods (aka verbs) shown below:
 
 | HTTP Method | Purpose |
 |:---------:|:----------|
@@ -100,33 +109,35 @@ APIs should at a minimum expose a standard REST interface using the four HTTP me
 | PATCH* | Partially update an existing resource |
 | DELETE | Remove a resource |
 
-_\* note: PATCH support is currently considered optional._
+_\* note: While PATCH support is not always required, it is highly recommended._
 
-These methods correspond nicely to database CRUD (Create, Read, Update, Delete) operations, however this correlation is not absolute (as discussed later).
+These methods correspond nicely to database CRUD (Create, Read, Update, Delete) operations, although this correlation is not absolute (as discussed later).
 
 In addition, APIs must ensure that:
+
 * 'GET' is 'safe', meaning that it does not have side effects and does not modify state on the server.
 * 'GET', 'PUT', 'PATCH' and 'DELETE' must be 'idempotent', meaning subsequent invocations of the same request will have no adverse consequences (other than using resources in order to provide a response to the client).
 
 That is, if a client application issues a 'PUT' request to update a resource, any subsequent issuing of that same request will have no effect (as the resource has already been updated).
 
-Ensuring PUT and PATCH are idempotent is a developer responsibility and is best explained using an example. Let's consider a resource that contains a numeric property. In this example, the API must not allow PUT to be used to simply 'increment' this value (e.g., to add 'one' to the current value) but must instead set the property to a specific value.  One strategy to ensure updates are idempotent is to use an optimistic lock. Optimistic locking, whose primary purpose is to protect a client from updating a resource based on stale data, is discussed later.  Similarly, in the case of 'DELETE', a second issuance of the same request must result in an error (as the resource was already deleted).
+Ensuring PUT and PATCH are idempotent is a developer responsibility and is best explained using an example. Let's consider a resource that contains a numeric property. In this example, the API must not allow PUT to be used to simply 'increment' this value (e.g., to add 'one' to the current value) but must instead set the property to a specific value.  Optimistic locking and using ETag-based conditional requests are two approaches (discussed later) that can ensure idempotency.  Similarly, in the case of 'DELETE', a second issuance of the same request must result in an error (as the resource was already deleted).
 
-When using PUT to 'update' a resource, PUT support may employ PATCH semantics. That is, PUT may be used to 'replace' (i.e., employ proper PUT semantics) a resource or partially modify (employ PATCH semantics) an existing resource. Regardless of the semantics used for PUT, the preferred approach for modifying existing resources is to use HTTP PATCH.  
+When using PUT to 'update' a resource, PUT support may employ PATCH semantics. That is, PUT may be used to 'replace' (i.e., employ proper PUT semantics) a resource or partially modify (employ PATCH semantics) an existing resource. Regardless of the semantics used for PUT, the preferred approach for partially modifying existing resources is to use HTTP PATCH.  
 
-When using JSON representations, it is very highly recommended [JSON PATCH](https://tools.ietf.org/html/rfc6902) be used for supporting PATCH. JSON Patch, discussed briefly later in this document, provides a very explicit mechanism to describe changes to a resource. 
+When using JSON representations, it is very highly recommended [JSON PATCH](https://tools.ietf.org/html/rfc6902) be used for supporting PATCH. JSON Patch, discussed later in this document, provides a very explicit mechanism to describe changes to a resource. 
 
-Two additional HTTP methods are encouraged but not required (as some frameworks do not provide support for them).  These are:
+Two additional HTTP methods may be needed:
 
 | HTTP Method | Purpose |
 |:---------:|:----------|
 | HEAD | Read metadata about a resource, but not the resource itself |
 | OPTIONS | Discover the supported methods, as returned in an 'Allow' header |
 
-Support for OPTIONS is particularly important when using [CORS](http://en.wikipedia.org/wiki/Cross-origin_resource_sharing), to support pre-flight requests issued by modern browsers.
+Support for OPTIONS is particularly important to allow use of [CORS](http://en.wikipedia.org/wiki/Cross-origin_resource_sharing) (to support pre-flight requests issued by modern browsers).
 
 #### <a id="http-codes"></a>Use Standard HTTP Status Codes
-RESTful APIs should be designed to use standard [HTTP status codes](http://httpstatus.es).  While there is no 'standard' regarding their use within REST APIs, the following status codes are recommended:
+
+HTTP APIs should be designed to use standard [HTTP status codes](http://httpstatus.es).  While there is no 'standard' regarding their use within APIs, the following status codes are recommended:
 
 | Status Code | Description |
 |:---------:|:----------|
@@ -156,7 +167,7 @@ While the above table represents a minimum list for API developers, your middlew
 
 #### Support Conditional Requests and Caching
 
-It is recommended that RESTful APIs support conditional requests and caching by including an ETag header within every response to a GET request.  ETags should be used to provide an opaque cache validator using an MD5 or SHA1 hash of the bytes within a representation.
+It is recommended that HTTP APIs support conditional requests and caching by including an ETag header within every response to a GET request.  ETags should be used to provide an opaque cache validator using an MD5 or SHA1 hash of the bytes within a representation.
 
 When a representation includes an optimistic lock token (e.g., often labeled as a resource 'version'), this can be used to augment the current optimistic lock verification. That is, since an ETag value will be constructed using the representation that includes the optimistic lock token, clients may use conditional GET requests to support optimistic locking.
 
@@ -170,7 +181,7 @@ To avoid unnecessarily sending a large representation to the server, an API may 
 
 To augment use more generic status codes like '400', it is recommended that a custom HTTP Header be used to provide more information. For example, if using a '400' status code for a validation error, a custom HTTP Header can provide additional information:
 
-```
+```http
     X-Status-Reason: Validation failed
 ```
 
@@ -199,24 +210,25 @@ Resources may be protected against stale updates by incorporating an optimistic 
 
 It is recommended that '409' be returned whenever an optimistic lock violation occurs while updating the database, regardless of whether there are other validation errors. This is often not the behavior implemented within frameworks (including Grails) and may require special logic to handle. The argument for this recommendation is: 'Do you really know if a resource representation is invalid when that representation is based on stale data? Some validation checks might fail simply because the representation is not consistent with the current persisted state. This recommendation is not a requirement, but warrants consideration when developing an API.
 
-Note: When handling a conditional PUT or PATCH request as discussed above, a 412 should be returned.
+When handling a conditional PUT or PATCH request as discussed above, a 412 should be returned. 
+
+Using an ETag-based conditional request (as discussed earlier) is preferred over incorporating an explicit optimistic lock check (and returning a '409' when violated) as described in this section.
 
 #### <a id="uri-conventions"></a>Use Common URI Conventions
 
-With respect to URIs, RESTful APIs should:
+With respect to URIs, HTTP APIs should:
 
 * Use transparent (readable) URIs unless specific requirements preclude
 * Use dashes (aka hyphens) in lieu of underscores (when easily supported by your framework)
-* Use dashes (aka hyphens) in lieu of camel case. (This is proposed only for 'API' URLs, and only if supported by your framework.)
 * Support nested resources when doing so is logical and only two levels deep
-* The use of pluralized resource names is preferred for URLs used to refer to either a collection or a single instance. For example, a list of colleges might be retrieved using 'GET /colleges' while a specific college instance might be retrieved using 'GET /colleges/\{id\}'. (Using singular naming is not incorrect, but using plural naming is also common and may arguably read better.)
+* Use pluralized resource names regardless of whether addressing a collection or a single instance. For example, a list of colleges might be retrieved using 'GET /colleges' while a specific college instance might be retrieved using 'GET /colleges/\{id\}'. (Using singular naming is not incorrect, but using plural naming is common and may arguably read better.)
 * Avoid use of multi-part keys to identify a resource.  If an exposed resource does not have a single, immutable key, attempt to model it as a nested resource.  For example, if exposing items from a checklist, and your legacy data model can only retrieve items by a combination of checklist name and item number within the checklist, prefer exposing items as '/checklists/myList/items/3' as opposed to /items/myList-3, which requires both caller and application to agree on an encoding mechanism for the multi-part key 'myList-3'.
 
 A nice overview of URIs is available at '[http://www.skorks.com/2010/05/what-every-developer-should-know-about-urls](http://www.skorks.com/2010/05/what-every-developer-should-know-about-urls)'.
 
 An example URL compliant with this strategy is:
 
-```
+```http
     https://greatvalley.edu/student-course-catalog/api/colleges/college-2453
 ```
 
@@ -224,7 +236,8 @@ An example URL compliant with this strategy is:
 
 When supporting PATCH and JSON respresentations, it is _highly recommended_ that [JSON Patch](https://tools.ietf.org/html/rfc6902) be employed as a standard approach to PATCH. JSON Patch is now supported on most platforms and there are many supporting libraries to facilitate supporting this standard.
 
-The proper custom media type for PATCH requests using JSON Patch is 'application/json-patch+json'. This standard custom media type should be set as the Content-Type header irrespective of the resource being patched.
+The proper custom media type for PATCH requests using JSON Patch is 'application/json-patch+json'. This standard custom media type should be set as the Content-Type header irrespective of the resource being patched.  
+A [JSON Schema for JSON Patch](https://github.com/chasdev/sample-json-schemas/blob/master/json-patch/json-patch.json) may be used to validate a patch.
 
 #### <a id="api-versioning"></a>Use API Versioning
 
@@ -237,7 +250,7 @@ There are several common approaches used across the industry today for versionin
 * using a custom header
 * using a custom media type identified in the Accept and Content-Type headers
 
-It is recommended RESTful APIs use either a custom header or custom media types when versioning is needed.  This versioning should be specified on a resource by resource basis.
+It is recommended HTTP APIs use either a custom header or custom media types when versioning is needed.  This versioning should be specified on a resource by resource basis.
 
 When using custom media types, they do not need to be [registered](http://www.iana.org/assignments/media-types/application) nor do they need to correspond to a schema document (although they often may).
 
@@ -247,57 +260,100 @@ Using a custom header, such as 'X-Resource-Version', may be useful when versioni
 
 _A note regarding the two non-recommended approaches:_
 
-* _Embedding version identifiers within the URL results in URLs that change, even though the 'resource' itself has not changed. This violates a major tenet of API design._
-* _Using a query parameter to specify versions is not convenient (as it requires parsing of query parameters)_
+* _Embedding version identifiers within the URL results in URLs that change, even though the 'resource' itself has not changed. This violates a major tenet of API design. However, many APIs do adopt this approach and while not 'pure' it does offer simplicity. While not recommended in this strategy, there are certainly well respected champions of this approach._
+* _Using a query parameter to specify versions is not convenient (as it requires parsing of query parameters). Unlike the above, this approach is truly 'not recommended'._
 
 An example custom media type consistent with this strategy is:
 
-```
+```http
     application/vnd.hedtech.v2+json
 ```
 
-An API client will likely find no benefit by using minor or patch point releases of an API, as minor and patch releases should be backward compatible. Consequently it may be simpler to use simple  indicators (e.g., v1, v2, v3) to indicate API versions. In some cases, however, it may be useful to indicate a full semver version (e.g., that corresponds to a schema catalog version supported by the API).
+An API client will likely find no benefit by using minor or patch point releases of an API, as minor and patch releases (assuming [Semantic Versioning](http://semver.org/)) are by definition backward compatible. 
+
+Consequently it is recommended that only the 'major' version be specified (e.g., v1, v2, v3) to indicate API versions. The API implementation may adopt the latest available backward compatible 'semver' version without affecting a client
 
 _Please reference the '[Use Standard Media Types](#media-types) section of this document for additional discussion regarding media types (that is not focused solely on versioning)._
 
-A final note regarding API versioning: In some cases **it may not be warranted.**  In fact, Roy Fielding states the best practice for versioning an API is: ["Don't"](http://www.slideshare.net/evolve_conference/201308-fielding-evolve/31).
+A final note regarding API versioning: In some cases **it may not be warranted.**  In fact, Roy Fielding states the best practice for versioning an API is: 
+>["Don't"](http://www.slideshare.net/evolve_conference/201308-fielding-evolve/31).
 
-Versioning of APIs introduces complexity both within the service implementation as well as within clients using the API.  If an API is 'relatively stable' (a subjective measure), the day-to-day cost may exceed the potentially very rare need to introduce a non-backward compatible representation of a resource. And, HATEOAS if adopted provides mechansims to introduce changes without versioning.
+Versioning of APIs introduces complexity both within the service implementation as well as within clients using the API.  If an API is 'relatively stable' (a subjective measure), the day-to-day cost may exceed the potentially very rare need to introduce a non-backward compatible representation of a resource. HATEOAS, if employed, also provides mechansims to introduce changes without versioning.
 
-#### <a id="api-paging"></a>Support Paging
-When returning collections, it may be necessary to support paging.  There is no single standard for paging, and this strategy will allow flexibility to allow common frameworks to provide this support.
+#### <a id="api-pagination"></a>Support Pagination
 
-It is recommended that paging leverage query parameters as shown in the following example:
+When returning collections, it will often be necessary to support pagination.  There is no single standard for pagination. Two very common approaches are 'page-based' or 'offset-based' pagination, although other 'cursor-based' (or 'token-based') are also found across the web. 
+
+Neither an 'offset-based' or 'page-based' approach can be stated as 'being more correct', however an offset-based approach does provide more granular control to the client. Consequently, an 'offset-based' approach is recommended, although a page-based approach would also satisfy most needs. 
+
+It is recommended two query parameters be used to provide pagination control to the client, as shown in the following example and table:
+
+```http
+    https://greatvalley.edu/student-course-catalog/api/colleges/?offset=350&limit=50
+```
+
+| Query Param | description |
+|:---------------:|:------------|
+| offset | This represents the offset from the first item in the dataset. |
+| limit | This represents the maximum number of items that may be included in the response. |
+
+While 'offset' and 'limit' are recommended, the specific query parameter names may differ based upon your framework. For instance, Grails uses 'offset' and 'max'. 
+
+It is a developer responsibility to provide validation and safeguards of pagination control. For example, if a client issues a request using a 'limit' of 10000, the API implemention may either reset the 'limit' to an acceptable pre-configured maximum before handling the request or i5 may return a 400 error code. In general, it is recommended to set this to a pre-defined maximum and not return an error.
+
+##### HTTP Response Headers 
+
+While the two query parameters above are used by a client to communicate pagination within an HTTP Request, an API will need to communicate pagination information within the response. It is recommended this be accomplished using two HTTP Headers, one standard and one custom, as described below.
+
+*Link Header*
+A standard [Link Header](http://tools.ietf.org/html/rfc5988) is recommended to communicate pagination within a response to a GET request for multiple resource instances whenever the response does not include the full dataset. (If it does include the full dataset (i.e., there is only one page) the Link Header may optionally still be included, but isn't necessary.)
+
+A Link Header identifies four 'link relation types' ('first', 'prev', 'next', and 'last') that pertain to pagination. These are shown in the example Link Header below: 
+
+```http
+Link: <https://{host:port}/courses?offset=500&limit=100>; rel="next",
+  <https://{host:port}/courses?offset=2700&limit=100>; rel="last",
+  <https://{host:port}/courses?offset=0&limit=100>; rel="first", 
+  <https://{host:port}/courses?offset=300&limit=100>; rel="prev",
+```
+
+<br/>
+The above example shows use of a concatenated Link header as defined at [http://www.w3.org/Protocols/9707-link-header.html](http://www.w3.org/Protocols/9707-link-header.html), where multiple lines need to be prefixed with a whitespace character. 
+
+Note each response may not contain all four of these link relations (aka relation types). For example, an initial request for the first 100 items will not be able to include a 'prev' link relation (as there is no previous batch of items at the beginning of the dataset). Similarly, the last batch of items would not be able to include the 'next' link relation.
+
+Also note multiple link relations may be combined for one link.  For instance, when the 'next' batch of items is also the 'last' batch, these two link relations may be expressed together as shown below:
 
 ```
-    https://greatvalley.edu/student-course-catalog/api/colleges/?per-page=50&page=7
+<https://{host:port}/courses?offset=500&limit=100>; rel="next last"
 ```
 
-While 'page' and 'limit' are recommended, the specific query parameter names may differ based upon your framework. For instance, Grails uses 'max' and 'offset' and 'page'. 
+*X-Total-Count*
+A custom Header is recommended to communicate the total number of items in a dataset (not just the number returned within a single response).
 
-Please see [Prefer Unwrapped Representations](#prefer-unwrapped-representations) which includes guidance pertaining to how paging should be reflected within responses when returning an array of representations versus returning an envelope.
-
-It is the developers responsibility to provide validation and safeguards. For example, if a client requests 10,000 items per page the service may either reset the 'limit' size to an acceptable pre-configured maximum before handling the request or the service may return a 400 error code.
+Providing the total count is quite useful although may not be supported in cases where a total count is difficult to assertain.
 
 #### Support Querying
-While there is no current standard for querying RESTful APIs, there are important considerations for the product architect.
+
+There is no current standard for querying HTTP APIs.
 
 When feasible, query criteria should be specified using query parameters in a GET request.  For instance, the following URL could be used to retrieve a list of forest science courses for term '200510 Fall 2004'.
 
-```
+```http
     https://greatvalley.edu/student-course-catalog/api/courses?subject=FRSC&term=200510%20Fall%202004
 ```
 A more structured alternative to the above uses indexed query parameter 'filters' as shown below.
 
-```
+```http
 https://greatvalley.edu/student-course-catalog/api/courses?filter[0][field]=subject&filter[1][value]=200510%20Fall%202004&filter[0][operator]=eq&filter[1][field]=term&filter[1][operator]=eq&filter[0][value]=FRSC&max=50
 ```
+It is also common to encode JSON on the URL to specify a query, although this can be hard to read.
 
-Nested resources can be used to provide an elegant RESTful API and may reduce the need for and the complexity of queries or filtering.  Use of nested resources is highly recommended as it can result in very well organized APIs.
+Nested resources can be used to provide an elegant HTTP API and may reduce the need for and the complexity of queries or filtering.  Use of nested resources is highly recommended as it can result in very well organized APIs.
 
 The following example shows how a resource may be exposed directly as well as be exposed as a nested resource, to allow a client application to retrieve a list of Forest Science courses for term '200510 Fall 2004'.
 
-```
+```http
     GET /courses?subject=FRSC&term=200510%20Fall%202004
     GET /subject/FRSC/courses?term=200510%20Fall%202004
     GET /subject/FRSC/terms/200510%20Fall%202004/courses
@@ -305,28 +361,28 @@ The following example shows how a resource may be exposed directly as well as be
 
 Note the last example above has deep nesting, which is not recommended. It is recommend that resources only be nested one level. Also note, that same resource (courses) could be accessed as a nested resource under yet another resource
 
-```
+```http
     GET /instructor/3895483/courses
 ```
 
-It is recommended nested resources be used for 'filtering' or to provide conceptual clarity as opposed to truly scoping the nested resource. That is, if a nested resource is explicitly specified on the URL (i.e., the URL specifies the ID of a particular nested resource in addition to the parent resource) it is recommended that ID be unique and usable beyond the parent resource. Following this recommendation ensures all resources can be uniquely identified without nesting (and may simplify framework creation of href and link elements).
-
-Using query parameters in conjunction with nested resources is recommended.  RESTful APIs should specify the queries that may be performed against a resource within API documentation and potentially identify them as affordances within response documents.
+Nested resources may be used as a scoping mechanism (where the ID of the nested resource is unique only within the scope of its parent) or only as a 'filtering' mechanism (where the nested resource ID is unique and usable beyond the scope of its parent resource). This latter use can be thought of as 'sugar' for filtering (that could alternatively be expressed as criteria specified using query parameters). 
 
 Including query (or filter) criteria within a GET request body is not recommended, as while the [HTTP 1.1 specification](http://www.w3.org/Protocols/rfc2616/rfc2616.html) doesn't preclude a GET containing a body there is [no convention in HTTP\/1.1 for safe interaction](http://www.w3.org/2001/tag/doc/whenToUseGet-20040321#safe) when a body is used. Nevertheless, some solutions such as [Elastic Search](http://www.elasticsearch.org) do implement search using this approach.
 
-For situations where complex query criteria must be used that is cumbersome to encode within the URL, a better approach is to model the query as a separate 'query' resource.  This would enable a client application to create a new 'query' resource (using an appropriate representation to codify the query criteria). The POST may result in execution of the query, or the API may require a subsequent GET of the newly created query resource (whose representation should include both the query criteria and the query results).
+For situations where complex query criteria must be used that is cumbersome to encode within the URL, a better approach is to model the query as a separate 'query' resource.  This would enable a client application to create a new 'query' resource (using an appropriate representation to codify the query criteria). The POST may result in execution of the query (referred to as 'query-by-POST'), or the API may require a subsequent GET of the newly created query resource (whose representation would include both the query criteria and the query results).
 
 When query criteria includes Personally Identifiable Information (PII), it must either be encrypted (if it is being passed as query parameters) or a POST must be used as discussed above.  This is because query parameters will likely be recorded within an HTTP server's access log.
 
 #### <a id="prefer-json"></a>Prefer JSON Representations
-JSON ([JavaScript Object Notation](http://www.json.org/)) is a data interchange standard that is a subset of the ECMAScript 5 language (JavaScript).  It provides a nice balance between expressiveness and simplicity, and is the preferred representation for RESTful APIs.
 
-XML based representations are also permitted by this strategy, in addition to or instead of JSON when requirements dictate.  Selected APIs may also support other formats in lieu of JSON and or XML when this is beneficial to the clients.
+JSON ([JavaScript Object Notation](http://www.json.org/)) is a data interchange standard that is a subset of the ECMAScript 5 language (JavaScript).  It provides a nice balance between expressiveness and simplicity, and is the preferred representation for HTTP APIs.
+
+XML based representations may be employed in addition to or instead of JSON when requirements dictate.  Selected APIs may also support other formats in lieu of JSON and or XML when this is beneficial to the clients.
 
 Using representations that support hypermedia is discussed later in this document within section [Support 'Hypermedia' APIs](#representation-hypermedia).
 
 #### <a id="media-types"></a>Accept Both Standard and Custom Media Types
+
 Determining the media type of a request is referred to as 'content negotiation', and is normally based upon the HTTP 'Content-Type' and 'Accept' headers.  For example, a client may submit a request using a 'Content-Type' header of 'application/xml' to inform the service that XML is being used, and also include an 'Accept' header of 'application/json' to request the service to respond with JSON content.
 
 When needed, RESTful APIs should support multiple [application media types](http://www.iana.org/assignments/media-types/application/index.html) by employing content negotiation. This is true when supporting API versioning as [discussed above](#api-versioning).  When a request identifies a custom media type that is not supported, a 415 (unsupported media type) error should be returned.
@@ -337,28 +393,20 @@ When a client does not specify a custom media type, the latest (current) version
 
 If no Accept header is specified, 'application/json' (or 'application/xml') should be assumed (based upon whether the API primary representation is JSON or XML). Recall that JSON is our preferred representation.
 
-In some circumstances it may be more convenient to accept a Content-Type of 'application/x-www-form-urlencoded' with the data encoded as JSON. While not desirable, this is permitted by the strategy when deemed appropriate by the product architect.
-
-While it is preferable for an API to leverage the Accept and Content-Type headers within a request to indicate a versioned or custom representation, the use of custom headers to identify this information is also permitted.  When a versioned or custom representation is indicated, both the custom header and standard header should identify the same custom media type. When custom headers used for content negotiation, it may be required by clients of the API (that is, a service need not fall back to the standard headers). Again, the use of standard headers is preferred.
-
-Using custom media types to enable support of client-specified custom representations of a resource, while not prohibited by this strategy, is not encouraged. That is, RESTful APIs should establish specific representations for resources (albeit versioned as discussed earlier when needed) versus supporting multiple representations (beyond a default JSON and or XML representation).
-
 While JSON is recommended for most endpoints, other representations may be required. For instance, 'ical' may be specified using 'text/calendar' and PDF may be specified using 'application/pdf' (or their custom media types counterparts 'text/vnd.hedtech.v2+calendar' and 'application/vnd.hedtech.v2+pdf' respectively).
 
-_It will be important to periodically revisit the strategy pertaining to media types, to assess emerging best practices and standards (e.g., [WRML](http://www.wrml.org))._
-
 #### <a id="standard-media-types"></a>Respond with Standard Media Types
+
 When a custom media type is used, it is recommended the service return a response using a Content-Type header with the standard 'application/json' (or 'application/xml') media type and an additional custom header such as shown below:
 
-```
-    X-hedtech-Media-Type: application/vnd.hedtech.v4+json
+```http
+    X-Media-Type: application/vnd.hedtech.v4+json
 ```
 
 This will facilitate viewing the response in a browser (e.g., using an add-on to render JSON or XML) or development tool while still communicating the version or custom format to the client.  Returning standard application/json is particularly useful for clients learning about your API, as browser add-ons will enable clients to more easily view the response.
 
-An API may always respond with a custom header, even when identifying a standard media type.  That is, a custom header may be used even if it identifies the same standard media type identified in the Content-Type header.
-
 #### <a id="domain-style"></a>Use a Consistent Representation 'Domain Style'
+
 Defining representations includes selection of the properties to be expressed, selecting appropriate attribute and element names, defining the structure (including hierarchical structures), and selecting the affordances that are deemed important to include.  Mike Amundsen[*](#texts) identifies three primary styles for representing domains: 'domain-specific', 'general', and 'agnostic'.
 
 | Domain Style | Description |
@@ -375,33 +423,14 @@ This strategy does not (at this time) require one style versus another but provi
 * Balance "purity" with pragmatism. Authors and standards like OData specify affordances that some may not consider pragmatic.  It is recommended to balance the 'purity' of approach with simplicity and productivity.
 
 #### <a id="prefer-unwrapped-representations"></a>Prefer Unwrapped Representations
-It is preferred by this strategy to accept and return content that is comprised solely of one or more representations, as opposed to wrapping the representation within another structure (e.g., an envelope).  While returning a 'pure' representation is very common when returning a single representation, some services return collections of a resource within another structure in order to include additional information such as paging information, total counts, etc.  Use of such an envelope, while not prohibited, is not recommended.  It is preferable to communicate any additional information such as paging information using HTTP headers. While using a ['Link' header](http://www.w3.org/Protocols/9707-link-header.html) is recommended, it may be more convenient to expose paging information using separate custom headers.
 
-For example, the following depicts returning a collection of 'colleges', with paging information reflected in a Link header:
+It is preferred by this strategy to accept and return content that is comprised solely of one or more representations, as opposed to wrapping the representation within another structure (i.e., an envelope).  
 
-```console
-    $ curl -H "Accept: application/vnd.hedtech.v4+json" -u batman:{PROTECTED} https://greatvalley.edu/student-course-catalog/api/colleges?page=2&per_page=10
-    HTTP/1.1 200 OK
-    Content-Type: application/json
-    X-hedtech-Media-Type: application/vnd.hedtech.v4+json
-    Link: <https://greatvalley.edu/student-course-catalog/api/colleges?page=3&per_page=10>; rel="next",
-      <https://greatvalley.edu/student-course-catalog/api/colleges?page=1&per_page=10>; rel="prev"
-    X-hedtech-totalCount: 317
-```
+While returning a 'pure' representation is very common when returning a single representation, some services return collections of a resource within another structure in order to include additional information such as paging information, total counts, etc.  Use of such an envelope is not recommended. 
 
-Note the addition of a custom header to communicate the total count. This is not required, but permitted. Alternatively, the following is permitted:
+It is preferable to communicate any additional information such as pagination information using HTTP headers (e.g., using a ['Link' header](http://www.w3.org/Protocols/9707-link-header.html) is recommended).  Please see '[Support Pagination](#api-pagination)' which discusses pagination and the use of the Link header.
 
-```console
-$ curl -H "Accept: application/vnd.hedtech.v4+json" -u batman:{PROTECTED} https://greatvalley.edu/student-course-catalog/api/colleges?offset=2&max=10
-HTTP/1.1 200 OK
-Content-Type: application/json
-X-hedtech-Media-Type: application/vnd.hedtech.v4+json
-X-hedtech-pageOffset: 2
-X-hedtech-pageMaxSize: 10
-X-hedtech-totalCount: 317
-```
-
-Regardless, the content is returned as a JSON array of the resources:
+The content is returned as a JSON array of the resources:
 
 ```json
   [
@@ -420,44 +449,11 @@ Regardless, the content is returned as a JSON array of the resources:
   ]
 ```
 
-Alternatively, although not preferred, a small envelope may be used to communicate the additional information (as in the following example):
-
-```console
-    $ curl -H "Accept: application/vnd.hedtech.v4+json" -u batman:{PROTECTED} https://greatvalley.edu/student-course-catalog/api/colleges?offset=2&max=10
-    HTTP/1.1 200 OK
-    Content-Type: application/json
-    X-hedtech-Media-Type: application/vnd.hedtech.v4+json
-```
-
-The content is returned as a JSON array of the resources:
-
-```json
-  {
-    "success": true,
-    "data": [
-      {
-        "id": 25,
-        "version": 3,
-        "code": "SA",
-        "description": "College of Sciences & Arts",
-      },
-      {
-        "id": 26,
-        "version": 1,
-        "code": "ZO",
-        "description": "College of Zoology",
-      },
-    ],
-    "page": 2,
-    "per-page": 10
-  }
-```
-
 #### <a id='bulk'></a>Bulk Processing (Collections) _(synchronous)_
 
-RESTful APIs may be developed to support 'bulk' processing when warranted. Such APIs expose resources that represent a collection of resources of a single type. Specifically, a 'bulk' API exposes a 'collection' resource that can include multiple resource instances to be handled in one synchronous invocation.  A 'bulk API' is simply an API that exposes a 'collection' resource. Since the 'collection' is represented as a single 'resource' that holds a collection of other resources, no 'bending of the rules' is required to support 'bulk APIs'.
+HTTP APIs may be developed to support 'bulk' processing when warranted. Such APIs expose resources that represent a collection of resources of a single type. Specifically, a 'bulk' API exposes a 'collection' resource that can include multiple resource instances to be handled in one synchronous invocation.  A 'bulk API' is simply an API that exposes a 'collection' resource. Since the 'collection' is represented as a single 'resource' that holds a collection of other resources, no 'bending of the rules' is required to support 'bulk APIs'.
 
-APIs that expose 'collection' resources may support GET, POST, PUT, PATCH, and DELETE following normal REST principlels. However, the use of GET should be supported only if the collection resource has a meaningful ID (as discussed below). Since it is easy to page through a filtered collection of resources without using a 'collection' resource, the only reason to retrieve one or more pages of 'collection' resources is if those collections have true business meaning (and weren't just being used as a mechanism to support 'bulk' operations).
+APIs that expose 'collection' resources may support GET, POST, PUT, PATCH, and DELETE following normal HTTP API guidelines. However, the use of GET should be supported only if the collection resource has a meaningful ID (as discussed below). Since it is easy to page through a filtered collection of resources without using a 'collection' resource, the only reason to retrieve one or more pages of 'collection' resources is if those collections have true business meaning (and weren't just being used as a mechanism to support 'bulk' operations).
 
 Using a 'collection' resource to represent many items is helpful to enable bulk POST, PUT, PATCH, and DELETE operations even when a collection may not itself have business meaning. GET should only be supported when the collection itself has business meaning (i.e., represents meaningful groupings of other resources).  
 
@@ -469,12 +465,13 @@ A 'collection' resource should, like any other resource, have a unique ID. Howev
 
 When a collection does not have business meaning (and thus does not have a meaningful ID), it is recommended a '1' be used to represent the ID (as we must retain the normal URL patterns that include an ID). However, in this situation, it is very important to consider the implications of caching (obviously, you will not want collection resources that do not have a meaningful ID to be cached). If a collection has a meaningful ID, GET should be supported to retrieve that identified collection. 
 
-```
+```http
 \# Note: id of '1' is not really used but included to comply with conventions
 PUT /collection-of-persons/1
 Content-Type: vnd.hedtech.collection-of-persons.v1+json;charset=utf-8
 Accept: vnd.hedtech.collection-of-persons.v1+json
 ```
+
 ```json
 {
   "persons": [ { "name": "Bart", "someAttribute": "someValue" },
@@ -495,13 +492,15 @@ Accept: vnd.hedtech.collection-of-persons.v1+json
 
 #### <a id='batch'></a>Batch Processing APIs _(asynchronous)_
 
-RESTful APIs may be developed to support 'batch' processing when warranted. Such APIs perform work *asynchronously*. Specifically, a 'batch' API supports submission of multiple, independent, asynchronous tasks.
+HTTP APIs may support 'batch' processing. Such APIs perform work *asynchronously*. Specifically, a 'batch (job)' API supports submission of asynchronous tasks.
 
 When an API is asynchronous it should respond with a '202 Accepted' HTTP status code.
 
-Following is an example request that shows a 'bulk' collection-oriented resource (see '[RESTful Bulk Processing](#bulk)' above) being created asynchronously. (While 'batch' APIs may often be used for 'collection' resources, a 'batch' API may be used for any resource. That is, an API can be exposed to support 'bulk', 'batch', or both bulk and batch processing.)
+Following is an example request that shows a 'bulk' collection-oriented resource (see '[RESTful Bulk Processing](#bulk)' above) being created asynchronously. 
 
-```
+While 'batch (job)' APIs may often be used with 'collection' resources, a 'batch' API may be used for any resource. That is, an API can be exposed to support 'bulk', 'batch', or both bulk and batch job processing.)
+
+```http
 POST /collection-of-persons
 Content-Type: vnd.hedtech.collection-of-persons.v1+json;charset=utf-8
 ```
@@ -516,12 +515,12 @@ Content-Type: vnd.hedtech.collection-of-persons.v1+json;charset=utf-8
 
 and an example response that includes a reference to the 'batch' processing:
 
-```
+```http
 HTTP 1.1 202 ok
 X-hedtech-message: collection-of-persons resource accepted
 ```
 
-```
+```http
 {
   "_link": "collection-of-persons/12345"
 }
@@ -529,7 +528,7 @@ X-hedtech-message: collection-of-persons resource accepted
 
 In this case, where we used a 'batch' API to create a 'collection' resource, that collection resource must be identifiable. Having such an identifier allows the client to issue a subsequent GET:
 
-```
+```http
 GET /collection-of-persons/12345
 Accept: vnd.hedtech.collection-of-persons.v1+json
 ```
@@ -565,19 +564,21 @@ whose response gives the current status of the asynchronous processing:
 
 The life of a 'collection' resource created through a batch API may limited, and the SLA of the API should specify how long the collection may be accessible as a 'collection' resource (versus the affected individual resources that may have been created). That is, the 'collection' may simply be associated to a job that was used to create individual resources and many not itself have long-term business value. 
 
-**Characteristics of a batch API are:**
+**Characteristics of a batch (job) API are:**
 
 * Supports submission of multiple, homogeneous operations against a specific resource using a single RESTful API invocation.
 * Adheres to REST principles (as only a single resource is acted upon, albeit that resource may represent a 'collection').
 * The 'asynchronous' nature is transparent to the RestfulApiController as it is encapsulated within the backend service to which the controller delegates. The controller only needs to know that a '202 Accepted' is the correct 'success' code.
 * May or may not represent a single unit of work (transaction) - depending upon the implementation (as discussed within '[RESTful Bulk Processing](#bulk)' above).
 
-**Special considerations for implementing a batch API include:**
+**Special considerations for implementing a batch (job) API include:**
 
 * If it is deemed necessary to expose a resource asynchronously, is there a need to also allow synchronous invocation? If so, a different prefix (e.g., 'aapi/') may be introduced to distinguish asynchronous from synchronous endpoints.)
 * An API may expose a 'bulk' collection-oriented resource used in an asynchronous request such that subsequent GET invocations may be used to retrieve the status of the asynchronous work.  If the resource instead represents a single entity (versus a collection), the true 'id' of that resource should be returned if possible.  If this is not possible (e.g., the 'id' cannot be specified until the asynchronous processing completes) then a temporary id may be returned *as long as that 'id' cannot conflict with a real 'id'. If a real 'id' is returned and a client issues a GET using that 'id' before the resource has been created asynchronously, a '404' should be returned.
 
 #### <a id="representation-hypermedia"></a>Support 'Hypermedia' APIs
+
+Support of 'hypermedia' is a requirement for RESTful APIs as previously stated.
 
 Unfortunately, neither XML nor JSON provide direct support for hypermedia. That is, neither XML nor JSON provides direct support for 'affordances' (or 'Hypermedia Factors') that express hypermedia related metadata.  Consequently, hypermedia APIs must codify this information.
 
@@ -585,13 +586,11 @@ Unfortunately, neither XML nor JSON provide direct support for hypermedia. That 
 
 >"When I say Hypertext, I mean the simultaneous presentation of information and controls such that the information becomes the affordance through which the user obtains choices and selects actions." &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Roy Fielding
 
-There is currently no de-facto standard with respect to XML or JSON H-Factors.  HTML5 and XHTML are currently the only standard media types that directly support affordances.  Evolving (and currently speculative) 'standards' like [OData](#odata), [Linked Data Platform](#ldp]), [JSON-LD](http://json-ld.org/spec/latest/json-ld-syntax/), and [JSON hypermedia API language](http://tools.ietf.org/html/draft-kelly-json-hal-03) (HAL) may address this in the future.
+There is currently no de-facto standard with respect to XML or JSON H-Factors.  HTML5 and XHTML are currently the only standard media types that directly support affordances.  There are various solutions including [OData](#odata), [Linked Data Platform](#ldp]), [JSON-LD](http://json-ld.org/spec/latest/json-ld-syntax/), and [JSON Hypermedia API Language](http://tools.ietf.org/html/draft-kelly-json-hal-03) (HAL) that address hypermedia.
 
-When such standards mature, Affordance-Rich Messages (ARMs) may be used to build very generic solutions that "are capable of recognizing and reacting to affordances in the message itself."[*](http://ws-rest.org/2012/proc/a8-1-amundsen.pdf)
+Through the use of hypermedia, 'Affordance-Rich Messages' (ARMs) may be used to build very generic solutions that "are capable of recognizing and reacting to affordances in the message itself."[*](http://ws-rest.org/2012/proc/a8-1-amundsen.pdf)
 
-For now, RESTful APIs should be developed with a pragmatic approach to incorporate additional links such as 'next' and 'previous' to support a multi-step process.
-
-To support affordances, link relations may be used to represent relationships between resources. The product architect may model link relations using [atom:link](http://tools.ietf.org/html/rfc4287#section-4.2.7) or [HAL](http://blog.stateless.co/post/13296666138/json-linking-with-hal).
+While APIs may simply incorporate additional links such as 'next' and 'previous' to support a multi-step process, link relations may be used to represent relationships between resources. These may be implemented using [atom:link](http://tools.ietf.org/html/rfc4287#section-4.2.7) or [HAL](http://blog.stateless.co/post/13296666138/json-linking-with-hal).
 
 ```console
     $ curl -H "Accept: application/json" -u batman:{PROTECTED} https://greatvalley.edu/student-course-catalog/api/colleges/25/
@@ -613,6 +612,7 @@ To support affordances, link relations may be used to represent relationships be
         "_supplementalData": null,
     }
 ```
+
 When a representation complies fully with HAL, a media type of application/hal+json may be used instead of application/json. While other emerging standards (e.g., JSON-LD) may be considered, HAL is recommended due to its simplicity. (It is not a requirement to use HAL over JSON-LD or other approach; the product architect should review the referenced libraries before making a decision. When these 'standards' are adopted more widely, this strategy will very likely require one over the other.)
 
 #### <a id="governance"></a>Governance
@@ -685,7 +685,7 @@ Modern solutions are likely to be implemented as single-page web applications co
 
 The preferred (and newer) approach is to support [Cross Origin Resource Sharing](http://www.w3.org/TR/cors) (CORS). CORS support is not required but should be considered by the product architect.
 
-An alternative approach to circumvent cross domain issues is to support JSON-P callbacks. This may be supported by allowing clients to include a '?callback' parameter to GET requests in order for the results to be wrapped within a JSON function. While permitted by this strategy, CORS is the preferred approach.
+An alternative, older, approach to circumvent cross domain issues is to support JSON-P callbacks. This may be supported by allowing clients to include a '?callback' parameter to GET requests in order for the results to be wrapped within a JSON function. While permitted by this strategy, CORS is the preferred approach.
 
 #### <a id="api-security"></a>RESTful API Authentication and Authorization
 
@@ -706,7 +706,7 @@ _Note: [SAML 2.0](http://en.wikipedia.org/wiki/SAML_2.0) does not currently defi
 
 Codifying tenancy/entity information within the URI path is recommended for on-premise deployments.
 
-```
+```http
     /{application-name}/{tenant-name}/api/{pluralized-resource-name}
 ```
 
@@ -737,11 +737,13 @@ As mentioned previously, there are many efforts underway to address the current 
 
 #### <a id="odata"></a>OData
 
-[OData](http://www.odata.org) is an OASIS project originally driven by Microsoft.  OData is based upon the Entity 1 Data Model (EDM) from Microsoft's 'Entity Framework'.  While Forrester currently positions OData as speculative, .Net projects that already incorporate EDM may find this a reasonable approach.  Consequently, this strategy does not preclude the adoption of OData.
+[OData](http://www.odata.org) is an OASIS project originally driven by Microsoft.  OData is based upon the Entity 1 Data Model (EDM) from Microsoft's 'Entity Framework'.  While Forrester currently positions OData as speculative, .Net projects that already incorporate EDM may find this a reasonable approach.
 
-OData is, however, very flexible with respect to both ‘filtering/querying’ and ‘refinement’ (where ‘refinement' refers to the practice of allowing the returned representations to be defined on the fly based upon the request). OData supports both of these concepts (the latter through the $select option).  (OData also supports $expand, a similar concept, to eagerly fetch related data.)  Regardless, ‘refinement’ is good for exposing a 'database-like' interface but may not be desireable for most APIs. 
+OData is, however, very flexible with respect to both ‘filtering/querying’ and ‘refinement’ (where ‘refinement' refers to the practice of allowing the returned representations to be defined on the fly based upon the request). OData supports both of these concepts (the latter through the $select option).  (OData also supports $expand, a similar concept, to eagerly fetch related data.)  Regardless, ‘refinement’ is good for exposing a 'database-like' interface but may not be desireable for many APIs. 
  
-OData, or any other approach that supports ‘refinement’, adds significant complexity to solutions and can result in clients requesting a subset of information and then finding they cannot perform a subsequent PUT/PATCH as they don’t have the ‘real’ representation of the resource. This practice arguably marginalizes the concept of a 'resource', and is not generally recommended. 
+OData, or any other approach that supports ‘refinement’, can be very problematic for APIs supporting integration. That is, a client that requests a subset of a resource representation may find it cannot perform a subsequent PUT/PATCH as it doesn’t have the ‘real’ representation of the resource. This practice arguably marginalizes the concept of a 'resource', and is not generally recommended for APIs used for integration.
+
+If tailoring of content is important, consider adopting a solution based upon '[Demand Driven Architecture](#demand-driven)' (that doesn't merge 'representations' with such customization). 
 
 #### <a id="ldp"></a>Linked Data Platform
 
@@ -755,11 +757,23 @@ This may be appropriate for services that have inherent support for core semanti
 
 While REST provides many benefits, it may not always be the best approach. Alternatives to REST may be considered. 
 
+####  <a id="demand-driven"></a>Demand Driven Architecture
+
+[Demand-Driven Architecture](http://www.infoq.com/presentations/domain-driven-architecture) addresses limitations of a representation-based APIs by giving clients control with respect to tailoring the content to be retrieved. This is similar to how OData allows 'refinement' of representations, but is separate from the concept of a 'representation' (it doesn't try to do both like OData).
+
+Demand-driven architecture is compelling as it allows different client types to request only the data they need. It probably isn't a good fit for integration purposes though.
+
+Both Netflix and Facebook are championing demand-driven architectures, and both have open sourced frameworks. Facebook has released a draft RFC for [GraphQL](https://facebook.github.io/graphql/) as well as a [reference implemenation](https://github.com/graphql/graphql-js). Netflix has released [Falcor](http://netflix.github.io/falcor/), which is a JavaScript library that uses JSON Graph. 
+
+Demand-Driven Architecture circumvents the limitations of a 'representation-based', 'one-size-fits-all' approach, and may become a critical component of an overall solution. While it may or may not be suitable for integration purposes, it allows multiple UIs implemented for various devices to fetch only the data needed.  
+
 #### Using RPC-Based APIs
 
 RPC-based APIs include those implemented using SOAP as well as native procedure invocations over a network.
 
 _Some may argue that SOAP is 'document centric' and is not the same as RPC. While developers may want to make such arguments, the reality is the 'RPC' is embedded within the document.  This is true regardless of the WSDL style used, including Microsoft's 'document/literal wrapped' pattern._
+
+While SOAP is not recommended, it can be convenient and appropriate to expose a simple API that is not based upon 'resources' or 'representations'. 
 
 ##### SOAP and WS-* Web Services
 
@@ -783,14 +797,16 @@ Architects are cautioned not to allow the use of Web Sockets to diminish the foc
 
 #### Asynchronous Messaging
 
-Asynchronous messaging provides a number of benefits and may augment the use of RESTful/hypermedia APIs.  Asynchronous messaging provides:
+Asynchronous messaging provides a number of benefits and may augment the use of HTTP and RESTful/hypermedia APIs.  Asynchronous messaging provides:
 
 * Reliability and guaranteed delivery
 * Asynchronous 'store and forward' semantics
 * Support for the 'Pub Sub' domain (subscription based consumption)
 * Support for event-based architectures
 
-However, caution is again necessary to avoid 'Enterprise Application Integration' (EAI) failures such as high complexity and difficult administration of middleware. Web standards often provide a more desirable (less complex) approach than propagating the use of message broker middleware within an organization.  Additionally, firewall issues may require special permissions or HTTP tunneling. Cloud-hosted asynchronous messaging solutions typically avoid these issues and expose HTTP APIs to support sending and retrieving messages. Amazon Web Service (AWS) [SQS](http://aws.amazon.com/sqs/) and [Kinesis](http://aws.amazon.com/kinesis/) are two such examples of asynchronous messaging services that may provide the specific semantics appropriate for a need.
+However, caution is again necessary to avoid 'Enterprise Application Integration' (EAI) failures such as high complexity and difficult administration of middleware. Web standards often provide a more desirable (less complex) approach than propagating the use of message broker middleware within an organization.  Additionally, firewall issues may require special permissions or HTTP tunneling. 
+
+Cloud-hosted asynchronous messaging solutions typically avoid these issues and expose HTTP APIs to support sending and retrieving messages. Amazon Web Service (AWS) [SQS](http://aws.amazon.com/sqs/) and [Kinesis](http://aws.amazon.com/kinesis/) are two such examples of asynchronous messaging services that may provide the specific semantics appropriate for a need.
 
 In addition, some NoSQL databases including MongoDB and Redis may be used to implement pub/sub semantics. Redis is particularly popular for this purpose. Using Redis is particularly attractive in cases where the key store is leveraged for other purposes such as configuration or caching. The pub sub semantics are often employed internally (not for the purpose of integration but to distribute the work load across asynchronous workers).
 
