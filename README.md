@@ -825,5 +825,5 @@ While direct database-level integration has significant drawbacks, it should be 
 * Numerous blogs found across the web. _(This strategy document is not an invention, but is a gathering of best practices and insights provided by many across the community.)_ 
 * Many APIs (e.g, those from Google, Amazon, GitHub, Netflix) provide detailed documentation that helped form the recommendations herein.
 * [JSON Hypermedia API Language](http://tools.ietf.org/html/draft-kelly-json-hal-03), Mike Kelly ([specification](http://stateless.co/hal_specification.html)
-* [Collection+JSON](http://amundsen.com/media-types/collection/format), Mike Amundsen
+* [Collection+JSON](https://web.archive.org/web/20160330080948/http://amundsen.com/media-types/collection/format/), Mike Amundsen
 
