@@ -1,4 +1,3 @@
-https://jenkins.devops.ellucian.com/jenkins/job/AppliedResearch/job/services/job/rest-api-service/job/master/3/console
 
 # RESTful API Strategy
 
