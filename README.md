@@ -132,7 +132,7 @@ That is, if a client application issues a 'PUT' request to update a resource, an
 
 Ensuring PUT and PATCH are idempotent is a developer responsibility and is best explained using an example. Let's consider a resource that contains a numeric property. In this example, the API must not allow PUT to be used to simply 'increment' this value (e.g., to add 'one' to the current value) but must instead set the property to a specific value.  Optimistic locking and using ETag-based conditional requests are two approaches (discussed later) that can ensure idempotency.  Similarly, in the case of 'DELETE', a second issuance of the same request must result in an error (as the resource was already deleted).
 
-When using PUT to 'update' a resource, PUT support may employ PATCH semantics. That is, PUT may be used to 'replace' (i.e., employ proper PUT semantics) a resource or partially modify (employ PATCH semantics) an existing resource. Regardless of the semantics used for PUT, the preferred approach for partially modifying existing resources is to use HTTP PATCH.  
+When using PUT to 'update' a resource, PUT support may employ PATCH semantics. That is, PUT may be used to 'replace' (i.e., employ proper PUT semantics) a resource or partially modify (employ PATCH semantics) an existing resource. Regardless of the semantics used for PUT, the preferred approach for partially modifying existing resources is to use HTTP PATCH.
 
 When using JSON representations, it is very highly recommended [JSON PATCH](https://tools.ietf.org/html/rfc6902) be used for supporting PATCH. JSON Patch, discussed later in this document, provides a very explicit mechanism to describe changes to a resource.
 
@@ -253,7 +253,7 @@ An example URL compliant with this strategy is:
 
 When supporting PATCH and JSON representations, it is _highly recommended_ that [JSON Patch](https://tools.ietf.org/html/rfc6902) be employed as a standard approach to PATCH. JSON Patch is now supported on most platforms and there are many supporting libraries to facilitate supporting this standard.
 
-The proper custom media type for PATCH requests using JSON Patch is 'application/json-patch+json'. This standard custom media type should be set as the Content-Type header irrespective of the resource being patched.  
+The proper custom media type for PATCH requests using JSON Patch is 'application/json-patch+json'. This standard custom media type should be set as the Content-Type header irrespective of the resource being patched.
 A [JSON Schema for JSON Patch](https://github.com/chasdev/sample-json-schemas/blob/master/json-patch/json-patch.json) may be used to validate a patch.
 
 #### <a id="api-versioning"></a>Use API Versioning (or not?)
@@ -434,7 +434,7 @@ This strategy does not (at this time) require one style versus another but provi
 
 #### <a id="prefer-unwrapped-representations"></a>Prefer Unwrapped Representations
 
-It is preferred by this strategy to accept and return content that is comprised solely of one or more representations, as opposed to wrapping the representation within another structure (i.e., an envelope).  
+It is preferred by this strategy to accept and return content that is comprised solely of one or more representations, as opposed to wrapping the representation within another structure (i.e., an envelope).
 
 While returning a 'pure' representation is very common when returning a single representation, some services return collections of a resource within another structure in order to include additional information such as paging information, total counts, etc.  Use of such an envelope is not recommended.
 
@@ -465,7 +465,7 @@ HTTP APIs may be developed to support 'bulk' processing when warranted. Such API
 
 APIs that expose 'collection' resources may support GET, POST, PUT, PATCH, and DELETE following normal HTTP API guidelines. However, the use of GET should be supported only if the collection resource has a meaningful ID (as discussed below). Since it is easy to page through a filtered collection of resources without using a 'collection' resource, the only reason to retrieve one or more pages of 'collection' resources is if those collections have true business meaning (and weren't just being used as a mechanism to support 'bulk' operations).
 
-Using a 'collection' resource to represent many items is helpful to enable bulk POST, PUT, PATCH, and DELETE operations even when a collection may not itself have business meaning. GET should only be supported when the collection itself has business meaning (i.e., represents meaningful groupings of other resources).  
+Using a 'collection' resource to represent many items is helpful to enable bulk POST, PUT, PATCH, and DELETE operations even when a collection may not itself have business meaning. GET should only be supported when the collection itself has business meaning (i.e., represents meaningful groupings of other resources).
 
 _Again, a 'bulk API' (i.e., exposing a 'collection' resource) is not necessary for filtering and paging a large number of individual resources. It is helpful when creating/modifying/deleting a collection of resources in a single operation._
 
@@ -692,7 +692,7 @@ This testing need not be complex. RESTful APIs can often be tested using simple 
 
 *While beyond the scope of this RESTful API guide, it is highly recommended API implementations be reactive systems.  Please reference [The Reactive Manifesto](http://www.reactivemanifesto.org).*
 
-####<a id="cors"></a>Support Cross Origin Resource Sharing (CORS)
+#### <a id="cors"></a>Support Cross Origin Resource Sharing (CORS)
 
 Modern solutions are likely to be implemented as single-page web applications comprised of JavaScript modules communicating to backend APIs residing in different domains.  To facilitate the ability to build such solutions, the API must support cross domain communication.
 
@@ -763,7 +763,7 @@ If tailoring of content is important, consider adopting a solution based upon '[
 
 #### <a id="ldp"></a>Linked Data Platform
 
-[Linked Data Platform](http://www.w3.org/2012/ldp/wiki/Main_Page) was a W3C working group that focused on addressing hypermedia requirements not sufficiently supporting using current REST best practices. This is part of the 'semantic web' and builds upon RDF. Other standards such as JSON-LD also facilitate expression of directed graphs.  
+[Linked Data Platform](http://www.w3.org/2012/ldp/wiki/Main_Page) was a W3C working group that focused on addressing hypermedia requirements not sufficiently supporting using current REST best practices. This is part of the 'semantic web' and builds upon RDF. Other standards such as JSON-LD also facilitate expression of directed graphs.
 
 This may be appropriate for services that have inherent support for core semantic web standards (e.g., [RDF](http://en.wikipedia.org/wiki/Resource_Description_Framework), [OWL2](http://en.wikipedia.org/wiki/Web_Ontology_Language), [JSON-LD](http://json-ld.org)), along with complementary standards like [SPARQL](http://en.wikipedia.org/wiki/SPARQL).
 
